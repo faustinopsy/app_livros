@@ -1,37 +1,16 @@
-import { home, servicos, sobre, contato, capturarFormulario, telaCadastro,capturacep } from '../paginas/paginas.js'
-//    URL  cria a ancora ou link
-//    LABEL  nome da ancora
-//    PAGINA  é que chama a pagina
-//    ACAO    é evento dentro da pagina
+import home from '../paginas/home.js'
+import servicos from '../paginas/servicos.js'
+import sobre from '../paginas/sobre.js'
+import contato from '../paginas/contato.js'
+import telaCadastro from '../paginas/formCad.js'
+
 const roteador = [
-    {
-        url:'#inicio',
-        label:'Inicial',
-        pagina: home
-    },
-    {
-        url:'#cep',
-        label:'Cadastro',
-        pagina: telaCadastro,
-        acao: capturacep
-    }
-    // ,
-    // {
-    //     url:'#sobre',
-    //     label:'Sobre',
-    //     pagina: sobre
-    // },
-    // {
-    //     url:'#servicos',
-    //     label:'Serviços',
-    //     pagina: servicos
-    // },
-    // {
-    //     url:'#contato',
-    //     label:'Contato',
-    //     pagina: contato,
-    //     acao: capturarFormulario
-    // }
+    home,
+    telaCadastro,
+    sobre,
+    servicos,
+    contato,
+    
 ]
 
 export default roteador;

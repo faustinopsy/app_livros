@@ -1,6 +1,6 @@
 // duas formas de exportar mais de uma função de um mesmo arquivo
 //
-function contato() {
+async function contato(app) {
 const paginadecontato = `<h1> Esta é página Contato </h1>
     <form class="bem-form" id="formulario-de-contato">
         <div class="bem-form__group">
@@ -21,10 +21,11 @@ const paginadecontato = `<h1> Esta é página Contato </h1>
     </ul>
     `
 
-return paginadecontato;
+    app.innerHTML = paginadecontato;
+    await capturarFormulario()
 } 
 
-function capturarFormulario(){
+async function capturarFormulario(){
     console.log("capturarFormulario foi chamada")
     const formulario = document.getElementById('formulario-de-contato');
     formulario.addEventListener("submit", function(event){
@@ -47,4 +48,8 @@ function capturarFormulario(){
     })
 }
 
-export {contato, capturarFormulario};
+export default {
+    url: '#contato',
+    label: 'Contato',
+    pagina: contato
+}

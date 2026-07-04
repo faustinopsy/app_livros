@@ -17,7 +17,7 @@ async function capturacep(){
         document.getElementById("estado").value = dados.estado
     })
 }
-async function telaCadastro(){
+async function telaCadastro(app){
     const formulario = `
     <form id="cadastroCliente" >
         <label for="cep">CEP</label>
@@ -32,8 +32,13 @@ async function telaCadastro(){
         <input type="text" id="estado">
     </form>
     `
-    return formulario;
+    app.innerHTML = formulario;
+    await capturacep()
 }
 
 
-export { telaCadastro, capturacep }
+export default {
+    url: '#cep',
+    label: 'Cadastro',
+    pagina: telaCadastro
+}

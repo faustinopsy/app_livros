@@ -1,8 +1,12 @@
-async function home() {
+async function home(app) {
     const paginainicial =  `<h1> Esta é página Inicial </h1>
 
     `
-    return paginainicial;
+    app.innerHTML = paginainicial;
 }
 
-export default home;
+export default {
+    url: '#home',
+    label: 'Home',
+    pagina: home
+}

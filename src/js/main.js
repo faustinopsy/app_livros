@@ -23,10 +23,10 @@ render();
 const rota404 = { pagina: () => `<div> Página não encontrada 404 </div>`}
 async function render(){
     const rotaAtual = mapaDeRotas[hash] || rota404
-    app.innerHTML = await rotaAtual.pagina()
-    if(typeof mapaDeRotas[hash].acao === 'function'){
-       await mapaDeRotas[hash].acao()
-    }
+    await rotaAtual.pagina(app)
+    // if(typeof mapaDeRotas[hash].acao === 'function'){
+    //    await mapaDeRotas[hash].acao()
+    // }
 }
 // testes de assincronismo
 // console.log("A Primeira chamada")

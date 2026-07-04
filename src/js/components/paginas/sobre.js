@@ -1,7 +1,13 @@
-function sobre(){
+function sobre(app){
     const sobre = `<h1> Esta é página Sobre </h1>
     <p>Este site é um exemplo de SPA usando JavaScript puro</p>
     `
-    return sobre
+    app.innerHTML = sobre
 }
-export default sobre;
+
+
+export default {
+    url: '#sobre',
+    label: 'Sobre',
+    pagina: sobre
+}
