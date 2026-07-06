@@ -1,0 +1,61 @@
+name: Publicar apostila
+
+# Sempre que houver push na branch de rascunho (os .md), regenera o HTML e o PDF
+# e publica na branch gh-pages (que o GitHub Pages serve).
+on:
+  push:
+    branches: [apostila-rascunho]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publicar-apostila
+  cancel-in-progress: true
+
+jobs:
+  build-e-publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (apostila-rascunho)
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Gerar HTML e PDF
+        # O runner ubuntu-latest já vem com o Google Chrome instalado,
+        # que o gerar-pdf.js encontra em /usr/bin/google-chrome.
+        run: node build/gerar-pdf.js
+
+      - name: Preparar pasta de publicação
+        run: |
+          mkdir -p public
+          cp build/apostila-completa.html public/index.html
+          cp build/apostila-completa.pdf  public/apostila-completa.pdf
+          touch public/.nojekyll
+          cat > public/README.md <<'EOF'
+          # JavaScript na Prática — Apostila (App Livros)
+
+          Página publicada automaticamente a partir da branch `apostila-rascunho`.
+
+          - **index.html** — apostila completa para leitura no navegador.
+          - **apostila-completa.pdf** — versão em PDF para download.
+
+          Não edite esta branch à mão: ela é gerada pelo GitHub Actions.
+          EOF
+
+      - name: Publicar na branch gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./public
+          force_orphan: true
+          commit_message: "docs: publicar apostila (gerado automaticamente)"

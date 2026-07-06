@@ -165,15 +165,18 @@ if (!navegador) {
 }
 
 console.log(`Imprimindo com: ${navegador}`);
-// Um perfil temporário próprio força uma instância limpa e evita que uma janela
-// do navegador já aberta faça o modo headless "não fazer nada" (no-op).
-const perfilTemp = path.join(os.tmpdir(), "apostila-print-" + Date.now());
-try {
+
+function imprimir(headlessFlag) {
+  // Um perfil temporário próprio força uma instância limpa e evita que uma janela
+  // já aberta do navegador faça o modo headless "não fazer nada" (no-op).
+  const perfilTemp = path.join(os.tmpdir(), "apostila-print-" + Date.now());
+  if (fs.existsSync(PDF_SAIDA)) fs.rmSync(PDF_SAIDA, { force: true });
   execFileSync(
     navegador,
     [
-      "--headless",
+      headlessFlag,
       "--disable-gpu",
+      "--no-sandbox", // necessário ao rodar como root (ex.: GitHub Actions)
       "--no-pdf-header-footer",
       `--user-data-dir=${perfilTemp}`,
       `--print-to-pdf=${PDF_SAIDA}`,
@@ -181,8 +184,22 @@ try {
     ],
     { stdio: "inherit" }
   );
-  console.log(`\n✅ PDF gerado: ${PDF_SAIDA}`);
+  return fs.existsSync(PDF_SAIDA) && fs.statSync(PDF_SAIDA).size > 0;
+}
+
+// Alguns pares navegador/SO gravam com "--headless" (legado), outros só com
+// "--headless=new". Tentamos ambos e confirmamos que o arquivo saiu de verdade.
+try {
+  const ok = imprimir("--headless") || imprimir("--headless=new");
+  if (ok) {
+    console.log(`\n✅ PDF gerado: ${PDF_SAIDA}`);
+  } else {
+    console.error("\n[aviso] O navegador não gravou o PDF.");
+    console.error("Abra o HTML no navegador e use Ctrl+P > Salvar como PDF.");
+    process.exit(1);
+  }
 } catch (e) {
   console.error("Falha ao imprimir em PDF:", e.message);
   console.error("Abra o HTML no navegador e use Ctrl+P > Salvar como PDF.");
+  process.exit(1);
 }
