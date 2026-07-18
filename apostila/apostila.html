@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Apostila Front-End 2</title>
+<style>
+    @page { size: A4; margin: 2cm 1.8cm; }
+    * { box-sizing: border-box; }
+    body {
+        font-family: "Segoe UI", Calibri, sans-serif;
+        font-size: 11pt; line-height: 1.5; color: #1a1a1a; margin: 0;
+    }
+    h1 { font-size: 20pt; color: #1F3864; border-bottom: 2px solid #2E5395;
+         padding-bottom: 6px; margin: 0 0 14px 0; }
+    h2 { font-size: 14.5pt; color: #2E5395; margin: 22px 0 8px 0; }
+    h3 { font-size: 12pt; color: #2E5395; margin: 16px 0 6px 0; }
+    p { margin: 0 0 10px 0; text-align: justify; }
+    a { color: #2E5395; word-break: break-all; }
+    ul, ol { margin: 0 0 10px 0; padding-left: 24px; }
+    li { margin-bottom: 3px; }
+    pre {
+        font-family: Consolas, "Courier New", monospace; font-size: 9pt;
+        line-height: 1.4; background: #F4F4F4; border: 1px solid #DDDDDD;
+        border-left: 4px solid #2E5395; border-radius: 3px;
+        padding: 10px 12px; margin: 0 0 12px 0;
+        white-space: pre-wrap; word-wrap: break-word;
+    }
+    code {
+        font-family: Consolas, "Courier New", monospace; font-size: 9.5pt;
+        background: #F4F4F4; padding: 1px 4px; border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; }
+    table { border-collapse: collapse; font-size: 9.5pt; margin: 0 0 12px 0; width: 100%; }
+    th, td { border: 1px solid #BBBBBB; padding: 5px 8px; text-align: left; }
+    th { background: #DEEAF6; color: #1F3864; }
+    blockquote { color: #555555; font-style: italic; border-left: 3px solid #CCCCCC;
+                 margin: 0 0 10px 0; padding: 2px 14px; }
+    .capitulo { page-break-before: always; }
+    pre, table, blockquote { page-break-inside: avoid; }
+    h1, h2, h3 { page-break-after: avoid; }
+
+    .capa { height: 90vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; }
+    .capa h1 { font-size: 30pt; border: none; }
+    .capa .sub { font-size: 15pt; color: #2E5395; margin-bottom: 30px; }
+    .capa .desc { font-size: 11pt; color: #555555; max-width: 70%; }
+
+    .sumario { page-break-before: always; }
+    .sumario ol { padding-left: 30px; }
+    .sumario li { margin-bottom: 8px; font-size: 11.5pt; }
+    .sumario a { text-decoration: none; word-break: normal; }
+</style></head>
+<body>
+
+<div class="capa">
+    <h1>Apostila Front-End 2</h1>
+    <div class="sub">JavaScript na pratica com o App Livros</div>
+    <div class="desc">
+        Curso construido aula a aula: dos fundamentos da linguagem
+        (variaveis, condicionais, lacos, funcoes e eventos) ate uma SPA
+        completa com roteamento por hash, componentes, assincronismo e
+        consumo de API, fechando com o uso de LLMs no fluxo de trabalho
+        do desenvolvedor.
+    </div>
+</div>
+
+<div class="sumario">
+    <h1>Sumario</h1>
+    <ol>
+        <li><a href="#cap01">Capítulo 1: Introdução ao projeto e preparação do ambiente</a></li>
+        <li><a href="#cap02">Capítulo 2: Variáveis e tipos de dados</a></li>
+        <li><a href="#cap03">Capítulo 3: Tomando decisões com if, else e switch</a></li>
+        <li><a href="#cap04">Capítulo 4: Repetindo tarefas com for e while</a></li>
+        <li><a href="#cap05">Capítulo 5: Arrays e objetos, organizando os dados da aplicação</a></li>
+        <li><a href="#cap06">Capítulo 6: Funções, com retorno e sem retorno</a></li>
+        <li><a href="#cap07">Capítulo 7: DOM e eventos de escuta</a></li>
+        <li><a href="#cap08">Capítulo 8: ES Modules e componentização</a></li>
+        <li><a href="#cap09">Capítulo 9: SPA e roteamento por hash</a></li>
+        <li><a href="#cap10">Capítulo 10: Assincronismo, o tempo no JavaScript</a></li>
+        <li><a href="#cap11">Capítulo 11: Consumindo APIs com fetch</a></li>
+        <li><a href="#cap12">Capítulo 12: Programando com IA, engenharia de prompt para desenvolvedores</a></li>
+        <li><a href="#cap13">Capítulo 13: Fechando o ciclo, o projeto completo e os próximos passos</a></li>
+    </ol>
+</div>
+<div class="capitulo"><h1 id="cap01">Capítulo 1: Introdução ao projeto e preparação do ambiente</h1>
+<h2>O que vamos construir neste curso</h2>
+<p>Antes de escrever a primeira linha de código, precisamos combinar o destino da viagem. Ao longo das aulas de sábado nós vamos construir, passo a passo, uma aplicação web completa chamada App Livros. Ela é uma SPA, sigla em inglês para Single Page Application, ou seja, uma aplicação de página única.</p>
+<p>O que isso significa na prática? Significa que o navegador carrega um único arquivo HTML e, a partir dele, todo o conteúdo das páginas (Home, Sobre, Serviços, Contato, Cadastro) é montado e trocado pelo JavaScript, sem recarregar a página inteira. É exatamente assim que funcionam aplicações modernas como Gmail e Twitter, e é assim que frameworks como React, Vue e Angular trabalham por baixo dos panos.</p>
+<p>A diferença é que nós vamos fazer tudo sem framework nenhum, usando apenas JavaScript puro (o famoso Vanilla JS). Quando você entender como uma SPA funciona por dentro, aprender qualquer framework depois vira uma questão de sintaxe, porque os conceitos você já domina.</p>
+<h2>Por que começar pelos fundamentos</h2>
+<p>Cada aula adiciona uma peça no projeto, e cada peça depende de um fundamento da linguagem:</p>
+<ol><li>Variáveis e tipos: guardar informações (Capítulo 2)</li>
+<li>Condicionais if, else e switch: tomar decisões (Capítulo 3)</li>
+<li>Laços for e while: repetir tarefas (Capítulo 4)</li>
+<li>Arrays e objetos: organizar dados, como a lista de rotas do menu (Capítulo 5)</li>
+<li>Funções: empacotar comportamentos, como as funções que geram páginas (Capítulo 6)</li>
+<li>DOM e eventos de escuta: reagir ao usuário, como o envio do formulário (Capítulo 7)</li>
+<li>Módulos e componentes: organizar o projeto em arquivos (Capítulo 8)</li>
+<li>Roteamento por hash: navegar entre páginas sem recarregar (Capítulo 9)</li>
+<li>Assincronismo: entender o tempo no JavaScript (Capítulo 10)</li>
+<li>Fetch e APIs: buscar dados externos, como o CEP no ViaCEP (Capítulo 11)</li></ol>
+<p>Repare que a ordem não é aleatória. É a ordem em que o próprio projeto foi crescendo nos commits do repositório. Se você olhar o histórico do Git vai ver essa evolução registrada aula a aula.</p>
+<h2>A estrutura do projeto</h2>
+<p>Esta é a organização de pastas que vamos construir e manter até o final:</p>
+<pre>app_livros/
+|-- index.html                     página única da SPA
+|-- src/
+|   |-- css/
+|   |   |-- microframework.css     estilos com metodologia BEM
+|   |-- img/                       imagens usadas nos cards
+|   |-- js/
+|       |-- main.js                ponto de entrada: roteador e render
+|       |-- components/
+|           |-- navbar/            menu dinâmico
+|           |-- footer/
+|           |-- rotas/             definição central das rotas
+|           |-- paginas/           home, sobre, servicos, contato, formCad</pre>
+<h2>O ponto de partida: index.html</h2>
+<p>Todo o HTML da aplicação se resume a isto:</p>
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;APP livros&lt;/title&gt;
+    &lt;link rel="stylesheet" href="src/css/microframework.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header id="navbar"&gt;&lt;/header&gt;
+    &lt;main id="app"&gt;&lt;/main&gt;
+    &lt;script src="src/js/main.js" type="module"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>Guarde bem esses dois elementos com id, porque eles são os pontos de montagem da aplicação:</p>
+<ul><li><code>&lt;header id="navbar"&gt;</code> é onde o JavaScript vai desenhar o menu</li>
+<li><code>&lt;main id="app"&gt;</code> é onde o JavaScript vai desenhar o conteúdo de cada página</li></ul>
+<p>Repare também no atributo <code>type="module"</code> do script. Ele avisa o navegador que vamos usar ES Modules, o sistema de importação e exportação de arquivos do JavaScript moderno, que estudaremos no Capítulo 8.</p>
+<h2>Como executar o projeto</h2>
+<p>Por causa do <code>type="module"</code>, o navegador exige que o projeto seja servido por um servidor HTTP. Abrir o arquivo direto com dois cliques (protocolo <code>file://</code>) não funciona.</p>
+<p>Opção 1, a mais usada em aula: extensão Live Server no VS Code. Clique com o botão direito no <code>index.html</code> e escolha Open with Live Server.</p>
+<p>Opção 2, pelo terminal:</p>
+<pre># com Python instalado
+python -m http.server 8000
+
+# ou com Node instalado
+npx serve</pre>
+<p>Depois acesse <code>http://localhost:8000</code> (ou a porta indicada) no navegador.</p>
+<h2>Ferramenta essencial: o console do navegador</h2>
+<p>Aperte F12 no navegador e abra a aba Console. Esse vai ser nosso melhor amigo durante o curso inteiro. É nele que:</p>
+<ul><li>aparecem os erros do nosso código, com o arquivo e a linha do problema</li>
+<li>imprimimos valores com <code>console.log()</code> para investigar o que está acontecendo</li>
+<li>testamos pequenos trechos de código antes de colocar no projeto</li></ul>
+<p>Acostume-se a programar com o console sempre aberto. Grande parte de aprender a programar é aprender a ler mensagens de erro sem medo.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>Vamos construir uma SPA em JavaScript puro, sem frameworks</li>
+<li>O HTML tem uma única página com dois pontos de montagem: <code>#navbar</code> e <code>#app</code></li>
+<li>Todo o resto da interface é gerado por JavaScript</li>
+<li>O projeto precisa rodar em um servidor HTTP por usar ES Modules</li>
+<li>O console do navegador (F12) é a principal ferramenta de estudo e depuração</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Crie a estrutura de pastas do projeto na sua máquina.</li>
+<li>Crie o <code>index.html</code> com os dois pontos de montagem.</li>
+<li>Rode o projeto com o Live Server e confirme que a página abre sem erros no console.</li>
+<li>Escreva <code>console.log("Olá, curso de Front-End 2")</code> em um arquivo <code>main.js</code> e confirme que a mensagem aparece no console.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Introdução ao JavaScript: https://developer.mozilla.org/pt-BR/docs/Learn/JavaScript/First_steps</li>
+<li>MDN Web Docs, SPA (Single Page Application): https://developer.mozilla.org/pt-BR/docs/Glossary/SPA</li>
+<li>W3Schools, JavaScript Tutorial: https://www.w3schools.com/js/</li></ul></div>
+<div class="capitulo"><h1 id="cap02">Capítulo 2: Variáveis e tipos de dados</h1>
+<h2>Guardando informações</h2>
+<p>Todo programa precisa guardar informações para trabalhar com elas depois: o nome de um usuário, o endereço da rota atual, a lista de serviços. Em JavaScript, guardamos informações em variáveis.</p>
+<p>Pense na variável como uma caixa etiquetada. A etiqueta é o nome da variável e o conteúdo é o valor. Quando escrevemos:</p>
+<pre>let hash = window.location.hash;</pre>
+<p>estamos criando uma caixa chamada <code>hash</code> e guardando dentro dela o endereço atual da página. Essa linha existe de verdade no nosso <code>main.js</code> e é uma das mais importantes do projeto, como veremos no capítulo de roteamento.</p>
+<h2>As três formas de declarar: var, let e const</h2>
+<p>O JavaScript tem três palavras reservadas para criar variáveis. Na prática do nosso curso usamos duas delas.</p>
+<h3>const</h3>
+<p>Use <code>const</code> quando o valor não vai ser reatribuído. É a nossa escolha padrão no projeto:</p>
+<pre>const app = document.getElementById('app');
+const mapaDeRotas = {};
+const rota404 = { pagina: () =&gt; `&lt;div&gt; Página não encontrada 404 &lt;/div&gt;` };</pre>
+<p>O elemento <code>app</code> é capturado uma vez e nunca trocamos a referência, então <code>const</code> comunica essa intenção para quem lê o código.</p>
+<p>Atenção a um detalhe importante: <code>const</code> impede a reatribuição, mas não congela o conteúdo de objetos e arrays. Repare que declaramos <code>const mapaDeRotas = {}</code> e depois adicionamos rotas dentro dele sem problema nenhum. O que não pode é fazer <code>mapaDeRotas = outraCoisa</code>.</p>
+<h3>let</h3>
+<p>Use <code>let</code> quando o valor precisa mudar ao longo do programa:</p>
+<pre>let hash = window.location.hash || '#inicio';
+// mais tarde, quando o usuário navega:
+hash = window.location.hash;</pre>
+<p>O <code>hash</code> muda toda vez que o usuário clica em um link do menu, por isso ele é <code>let</code> no nosso roteador.</p>
+<h3>var</h3>
+<p>O <code>var</code> é a forma antiga, de antes de 2015. Ele ainda funciona, mas tem comportamentos confusos de escopo que causam bugs difíceis de achar. Regra da nossa sala de aula: não usamos <code>var</code> em código novo. Se aparecer em algum material antigo na internet, você sabe que é código legado.</p>
+<h2>Tipos de dados primitivos</h2>
+<p>O JavaScript é uma linguagem de tipagem dinâmica: a variável assume o tipo do valor que recebe. Os tipos que mais usamos no projeto:</p>
+<pre>// string: textos, sempre entre aspas
+const titulo = "Jogo das quartas de final da copa do mundo de 2002";
+
+// number: números inteiros ou decimais, sem aspas
+let contador = 0;
+const preco = 49.90;
+
+// boolean: verdadeiro ou falso
+const menuAberto = false;
+
+// undefined: a caixa existe mas ninguém colocou nada dentro
+let mensagem;
+console.log(mensagem); // undefined
+
+// null: ausência intencional de valor
+let usuarioLogado = null;</pre>
+<p>Você pode descobrir o tipo de qualquer valor com o operador <code>typeof</code>:</p>
+<pre>console.log(typeof titulo);      // "string"
+console.log(typeof contador);    // "number"
+console.log(typeof menuAberto);  // "boolean"</pre>
+<h2>Template strings: a ferramenta que usamos o curso inteiro</h2>
+<p>Existem três formas de escrever strings: aspas simples, aspas duplas e crase (acento grave). A crase cria uma template string, e ela é tão importante que praticamente toda página do nosso projeto é construída com ela.</p>
+<p>A template string tem dois superpoderes:</p>
+<ol><li>Aceita quebras de linha, o que permite escrever HTML de vários parágrafos dentro do JavaScript</li>
+<li>Aceita interpolação de valores com a sintaxe <code>${expressao}</code></li></ol>
+<p>Veja como a página Sobre do projeto usa os dois recursos:</p>
+<pre>function sobre(app){
+    const sobre = `&lt;h1&gt; Esta é página Sobre &lt;/h1&gt;
+    &lt;p&gt;Este site é um exemplo de SPA usando JavaScript puro&lt;/p&gt;
+    `
+    app.innerHTML = sobre
+}</pre>
+<p>E veja a interpolação em ação na lista de contatos:</p>
+<pre>li.textContent = `O Assunto é ${assunto}
+ e o email é ${email}
+ e a mensagem é ${mensagem}`;</pre>
+<p>Tudo o que estiver dentro de <code>${}</code> é avaliado como JavaScript e o resultado entra no texto. É assim que misturamos dados com HTML durante todo o curso.</p>
+<h2>Nomeando bem as variáveis</h2>
+<p>Regras técnicas: o nome pode conter letras, números, <code>_</code> e <code>$</code>, mas não pode começar com número nem conter espaços ou acentos.</p>
+<p>Regras de qualidade, que valem mais que as técnicas:</p>
+<ul><li>Use nomes que descrevem o conteúdo: <code>mapaDeRotas</code> e não <code>m</code></li>
+<li>Use o padrão camelCase, como em <code>telaCadastro</code> e <code>capturarFormulario</code></li>
+<li>Prefira nomes em um idioma só no projeto inteiro</li></ul>
+<p>Um código bem nomeado quase dispensa comentários. Compare <code>const x = document.getElementById('app')</code> com <code>const app = document.getElementById('app')</code> e perceba como o segundo se explica sozinho.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>Variáveis são caixas etiquetadas que guardam valores</li>
+<li><code>const</code> para valores que não serão reatribuídos (nossa escolha padrão), <code>let</code> para os que mudam, <code>var</code> não usamos</li>
+<li>Os tipos principais são string, number, boolean, undefined e null</li>
+<li>Template strings com crase permitem quebras de linha e interpolação com <code>${}</code>, e são a base da renderização das nossas páginas</li>
+<li>Nomes descritivos em camelCase tornam o código legível</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Crie variáveis para descrever um livro: título, autor, ano, preço e disponível (boolean). Escolha entre <code>const</code> e <code>let</code> justificando cada escolha.</li>
+<li>Use uma template string para montar uma frase de apresentação do livro interpolando as variáveis.</li>
+<li>Imprima o <code>typeof</code> de cada variável no console e confira se bate com o esperado.</li>
+<li>Tente reatribuir uma <code>const</code> e leia com calma a mensagem de erro que o console mostra.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Declarações e variáveis: https://developer.mozilla.org/pt-BR/docs/Learn/JavaScript/First_steps/Variables</li>
+<li>MDN Web Docs, Template strings: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Template_literals</li>
+<li>W3Schools, JavaScript Variables: https://www.w3schools.com/js/js_variables.asp</li>
+<li>W3Schools, JavaScript Data Types: https://www.w3schools.com/js/js_datatypes.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap03">Capítulo 3: Tomando decisões com if, else e switch</h1>
+<h2>Programas que decidem</h2>
+<p>Até agora nossas variáveis apenas guardam valores. Mas um programa de verdade precisa tomar decisões: se a rota existe, mostra a página; senão, mostra o erro 404. Se o formulário está preenchido, envia; senão, avisa o usuário. Essa capacidade de decidir é o que chamamos de estrutura condicional.</p>
+<h2>Operadores de comparação</h2>
+<p>Antes de decidir, precisamos comparar. Os operadores de comparação sempre devolvem um boolean, ou seja, <code>true</code> ou <code>false</code>:</p>
+<pre>5 &gt; 3        // true
+5 &lt; 3        // false
+5 &gt;= 5       // true
+5 &lt;= 4       // false
+5 == "5"     // true  (compara só o valor, converte o tipo)
+5 === "5"    // false (compara valor E tipo)
+5 != "5"     // false
+5 !== "5"    // true</pre>
+<p>Regra da sala de aula: use sempre <code>===</code> e <code>!==</code>, os operadores estritos. O <code>==</code> faz conversões automáticas de tipo que geram surpresas desagradáveis. Por exemplo, <code>0 == ""</code> é <code>true</code>, o que raramente é o que você quer.</p>
+<h2>Operadores lógicos</h2>
+<p>Para combinar condições usamos três operadores:</p>
+<pre>// &amp;&amp; (E): as duas condições precisam ser verdadeiras
+idade &gt;= 18 &amp;&amp; possuiIngresso === true
+
+// || (OU): basta uma condição ser verdadeira
+diaSemana === "sabado" || diaSemana === "domingo"
+
+// ! (NÃO): inverte o valor
+!menuAberto   // se menuAberto é false, vira true</pre>
+<h2>O if e o else</h2>
+<p>A estrutura básica é: se a condição for verdadeira, executa o primeiro bloco; senão, executa o bloco do <code>else</code>:</p>
+<pre>const hora = 14;
+
+if (hora &lt; 12) {
+    console.log("Bom dia");
+} else if (hora &lt; 18) {
+    console.log("Boa tarde");
+} else {
+    console.log("Boa noite");
+}</pre>
+<p>O <code>else if</code> permite encadear quantos testes forem necessários, e o <code>else</code> final é o plano B quando nenhum teste passou.</p>
+<h2>Onde o projeto usa condicionais sem você perceber</h2>
+<h3>O truque do || no roteador</h3>
+<p>Olhe esta linha do nosso <code>main.js</code>:</p>
+<pre>let hash = window.location.hash || '#inicio';</pre>
+<p>O operador <code>||</code> aqui funciona como um valor padrão. Quando o usuário abre o site pela primeira vez, <code>window.location.hash</code> é uma string vazia, que o JavaScript considera um valor falso (falsy). Então o <code>||</code> entrega o valor da direita, <code>'#inicio'</code>. É o equivalente compacto de:</p>
+<pre>let hash;
+if (window.location.hash) {
+    hash = window.location.hash;
+} else {
+    hash = '#inicio';
+}</pre>
+<h3>A rota 404</h3>
+<p>O mesmo truque aparece na hora de renderizar:</p>
+<pre>const rota404 = { pagina: () =&gt; `&lt;div&gt; Página não encontrada 404 &lt;/div&gt;` }
+
+async function render(){
+    const rotaAtual = mapaDeRotas[hash] || rota404
+    await rotaAtual.pagina(app)
+}</pre>
+<p>Se o <code>hash</code> digitado não existe no <code>mapaDeRotas</code>, a busca devolve <code>undefined</code>, que também é falsy, e o <code>||</code> entrega a <code>rota404</code>. Uma linha só resolve toda a lógica de página não encontrada.</p>
+<h3>Verificando se algo é uma função</h3>
+<p>Em uma das versões do roteador tínhamos este teste:</p>
+<pre>if (typeof mapaDeRotas[hash].acao === 'function') {
+    await mapaDeRotas[hash].acao()
+}</pre>
+<p>Traduzindo: só execute a <code>acao</code> da rota se ela existir e for de fato uma função. Sem esse <code>if</code>, rotas sem <code>acao</code> quebrariam o programa.</p>
+<h2>Valores truthy e falsy</h2>
+<p>O JavaScript considera falsos (falsy) estes valores quando aparecem em uma condição: <code>false</code>, <code>0</code>, <code>""</code> (string vazia), <code>null</code>, <code>undefined</code> e <code>NaN</code>. Todo o resto é verdadeiro (truthy), inclusive strings com conteúdo, números diferentes de zero, arrays e objetos, mesmo vazios.</p>
+<p>É por isso que podemos escrever <code>if (window.location.hash)</code> sem comparar com nada: estamos perguntando se a string tem conteúdo.</p>
+<h2>O switch case</h2>
+<p>Quando comparamos a mesma variável contra vários valores exatos, o <code>switch</code> fica mais legível que uma escada de <code>else if</code>:</p>
+<pre>const rota = "#contato";
+
+switch (rota) {
+    case "#home":
+        console.log("Mostrando a página inicial");
+        break;
+    case "#sobre":
+        console.log("Mostrando a página sobre");
+        break;
+    case "#contato":
+        console.log("Mostrando a página de contato");
+        break;
+    default:
+        console.log("Página não encontrada 404");
+}</pre>
+<p>Três pontos de atenção:</p>
+<ol><li>O <code>switch</code> compara com <code>===</code>, ou seja, valor e tipo</li>
+<li>O <code>break</code> encerra o caso; sem ele a execução vaza para o caso seguinte</li>
+<li>O <code>default</code> é o equivalente do <code>else</code>, executado quando nenhum caso combina</li></ol>
+<p>Curiosidade importante para o nosso projeto: nas primeiras aulas o roteamento poderia ter sido feito com um <code>switch</code> gigante testando cada hash. Nós escolhemos outro caminho, o objeto <code>mapaDeRotas</code>, porque adicionar uma rota nova vira só adicionar um item no array, sem mexer no roteador. Guarde essa comparação, ela volta no Capítulo 9.</p>
+<h2>O operador ternário</h2>
+<p>Para decisões curtas que produzem um valor, existe a forma compacta:</p>
+<pre>const mensagem = idade &gt;= 18 ? "Pode entrar" : "Entrada não permitida";</pre>
+<p>Leia assim: condição, interrogação, valor se verdadeiro, dois pontos, valor se falso. Use apenas para casos simples; se a lógica cresce, volte para o <code>if</code> normal.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>Condicionais permitem que o programa escolha caminhos diferentes</li>
+<li>Use sempre <code>===</code> e <code>!==</code> nas comparações</li>
+<li>O <code>||</code> serve como valor padrão e é usado duas vezes no coração do nosso roteador</li>
+<li>Valores falsy: <code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code></li>
+<li>O <code>switch</code> é uma alternativa legível para comparar uma variável contra vários valores exatos</li>
+<li>O ternário resolve decisões curtas em uma linha</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Escreva uma função que recebe uma hora (0 a 23) e devolve a saudação correta usando if e else if.</li>
+<li>Reescreva o exercício 1 usando switch (dica: use <code>switch (true)</code> ou faixas de valores com Math.floor).</li>
+<li>Simule o comportamento da rota 404: crie um objeto com três rotas, busque uma rota que não existe e use <code>||</code> para devolver uma mensagem padrão.</li>
+<li>Teste no console cada valor falsy dentro de um <code>if</code> e confirme que o bloco não executa.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, if...else: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Statements/if...else</li>
+<li>MDN Web Docs, switch: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Statements/switch</li>
+<li>MDN Web Docs, Operadores lógicos: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Operators/Logical_OR</li>
+<li>W3Schools, JavaScript if else: https://www.w3schools.com/js/js_if_else.asp</li>
+<li>W3Schools, JavaScript switch: https://www.w3schools.com/js/js_switch.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap04">Capítulo 4: Repetindo tarefas com for e while</h1>
+<h2>Por que repetir</h2>
+<p>Imagine montar o menu do site escrevendo um <code>&lt;li&gt;</code> de cada vez para Home, Cadastro, Sobre, Serviços e Contato. Agora imagine que o cliente pede uma sexta página. E uma sétima. Copiar e colar código é o caminho mais curto para o bug, porque toda alteração precisa ser repetida em vários lugares.</p>
+<p>Os laços de repetição (loops) resolvem isso: escrevemos a instrução uma vez e mandamos o JavaScript repetir quantas vezes for preciso.</p>
+<h2>O laço for clássico</h2>
+<p>A estrutura tem três partes separadas por ponto e vírgula: inicialização, condição de continuação e incremento.</p>
+<pre>for (let i = 0; i &lt; 5; i++) {
+    console.log("Volta número " + i);
+}</pre>
+<p>Lendo em voz alta: crie um contador <code>i</code> começando em zero; enquanto <code>i</code> for menor que 5, execute o bloco; ao final de cada volta, some 1 ao contador. O resultado imprime as voltas 0, 1, 2, 3 e 4.</p>
+<p>Detalhe que sempre gera pergunta em aula: por que começar do zero? Porque as posições de um array começam do zero, como vimos ao estudar arrays. O primeiro item é <code>lista[0]</code>. Então o par <code>let i = 0</code> com <code>i &lt; lista.length</code> percorre o array inteiro sem estourar o limite.</p>
+<h2>O for no projeto: a página de Serviços</h2>
+<p>A página de Serviços do App Livros é o exemplo perfeito. Temos um array de objetos com os detalhes de cada card:</p>
+<pre>const detalhes = [
+    {
+        titulo: 'Jogo das quartas de final da copa do mundo de 2002',
+        descricao: 'xxxxxxxx xxxxxxxxx xxxxx',
+        imagem: 'src/img/2002_1.webp'
+    },
+    {
+        titulo: 'Jogo especial',
+        descricao: 'xxxxxxxx xxxxxxxxx xxxxx',
+        imagem: 'src/img/2002_2.jpg'
+    },
+    // ... outros itens
+]</pre>
+<p>E um <code>for</code> que transforma cada objeto em um card de HTML:</p>
+<pre>function servicos(app){
+    cardServico += `&lt;div class="bem-grid-auto"&gt;`
+    for(let i = 0; i &lt; detalhes.length; i++){
+        cardServico += `
+                    &lt;div class="bem-card"&gt;
+                        &lt;img class="bem-card__image" src="${detalhes[i].imagem}" alt="Image description"&gt;
+                        &lt;div class="bem-card__body"&gt;
+                            &lt;h3 class="bem-card__title"&gt;${detalhes[i].titulo}&lt;/h3&gt;
+                            &lt;p&gt;${detalhes[i].descricao}&lt;/p&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+            `
+    }
+    cardServico += `&lt;/div&gt;`
+    app.innerHTML = cardServico
+}</pre>
+<p>Repare no padrão: uma variável acumuladora (<code>cardServico</code>) começa com a abertura do grid, o laço concatena um card por volta usando <code>detalhes[i]</code> para acessar o item da vez, e no final fechamos o grid e jogamos tudo no <code>innerHTML</code>. Quatro cards ou quarenta, o código é o mesmo. Para adicionar um serviço novo, basta adicionar um objeto no array.</p>
+<h2>O for...of</h2>
+<p>Quando não precisamos do índice numérico, o <code>for...of</code> percorre diretamente os valores e deixa o código mais limpo. É ele que usamos no <code>main.js</code> para montar o mapa de rotas:</p>
+<pre>const mapaDeRotas = {}
+for (const rota of roteador) {
+    mapaDeRotas[rota.url] = rota
+}</pre>
+<p>Leia assim: para cada <code>rota</code> dentro do array <code>roteador</code>, crie no objeto <code>mapaDeRotas</code> uma chave com a url dessa rota apontando para a rota inteira. Em três linhas transformamos um array em um objeto de consulta rápida. Esse trecho é o coração do roteador e será destrinchado no Capítulo 9.</p>
+<h2>O laço while</h2>
+<p>O <code>while</code> repete enquanto a condição for verdadeira, sem prometer quantas voltas serão. Use quando o número de repetições não é conhecido de antemão:</p>
+<pre>let tentativas = 0;
+let senhaCorreta = false;
+
+while (!senhaCorreta &amp;&amp; tentativas &lt; 3) {
+    tentativas++;
+    // aqui pediríamos a senha ao usuário
+    console.log("Tentativa número " + tentativas);
+    // senhaCorreta receberia o resultado da verificação
+}</pre>
+<p>Cuidado clássico: se a condição nunca ficar falsa, o laço roda para sempre e trava a página. Todo <code>while</code> precisa de algo dentro do bloco que caminhe para o fim, como o <code>tentativas++</code> acima.</p>
+<p>Existe também o <code>do...while</code>, que executa o bloco pelo menos uma vez antes de testar a condição:</p>
+<pre>let resposta;
+do {
+    resposta = "s"; // simulando uma entrada do usuário
+} while (resposta !== "s" &amp;&amp; resposta !== "n");</pre>
+<h2>break e continue</h2>
+<p>Duas palavras controlam o laço por dentro:</p>
+<pre>for (let i = 0; i &lt; 10; i++) {
+    if (i === 3) continue; // pula esta volta e vai para a próxima
+    if (i === 7) break;    // encerra o laço de vez
+    console.log(i);        // imprime 0 1 2 4 5 6
+}</pre>
+<h2>for tradicional ou métodos de array?</h2>
+<p>No Capítulo 5 vamos conhecer o método <code>.map()</code>, que a navbar usa para gerar os itens do menu. Nos comentários do arquivo <code>navbar.js</code> deixamos registrada a versão com <code>for</code> para comparação:</p>
+<pre>/*
+for(let i = 0; i &lt; item_menu.length; i++){
+    `&lt;li class="bem-navbar__item"&gt;
+        &lt;a href="${item_menu[i].url}" class="bem-navbar__link"&gt;${item_menu[i].label}&lt;/a&gt;
+    &lt;/li&gt;`
+}
+*/</pre>
+<p>Os dois resolvem o mesmo problema. O <code>for</code> dá controle total (índice, break, continue), enquanto o <code>.map()</code> é mais declarativo: diz o que fazer com cada item e devolve um array novo pronto. Saber os dois é obrigatório; escolher qual usar é questão de contexto e legibilidade.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>Laços eliminam código repetido: escreva uma vez, execute muitas</li>
+<li>O <code>for</code> clássico tem inicialização, condição e incremento, e casa perfeitamente com arrays indexados do zero</li>
+<li>O padrão acumulador (string que cresce a cada volta) é como a página de Serviços monta seus cards</li>
+<li>O <code>for...of</code> percorre valores diretamente e é usado para montar o <code>mapaDeRotas</code></li>
+<li>O <code>while</code> repete enquanto a condição valer, e exige cuidado para não virar laço infinito</li>
+<li><code>break</code> encerra o laço, <code>continue</code> pula para a próxima volta</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Crie um array com cinco títulos de livros e use um <code>for</code> clássico para imprimir cada um numerado no console.</li>
+<li>Refaça o exercício 1 com <code>for...of</code>.</li>
+<li>Adicione um quinto objeto ao array <code>detalhes</code> da página de Serviços e confirme que o card novo aparece sem mudar o laço.</li>
+<li>Escreva um <code>while</code> que soma os números de 1 a 100 e imprime o total.</li>
+<li>Desafio: usando o padrão acumulador, gere uma tabela HTML (string) a partir de um array de objetos com nome e preço de livros.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Laços e iterações: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Loops_and_iteration</li>
+<li>MDN Web Docs, for...of: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Statements/for...of</li>
+<li>W3Schools, JavaScript For Loop: https://www.w3schools.com/js/js_loop_for.asp</li>
+<li>W3Schools, JavaScript While Loop: https://www.w3schools.com/js/js_loop_while.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap05">Capítulo 5: Arrays e objetos, organizando os dados da aplicação</h1>
+<h2>Dados que andam juntos</h2>
+<p>Uma variável guarda um valor. Mas o mundo real raramente é um valor só: um serviço tem título, descrição e imagem; uma rota tem url, label e a função da página. Precisamos de estruturas que agrupem dados relacionados. São elas o objeto e o array, e a combinação das duas sustenta o App Livros inteiro.</p>
+<h2>Objetos: dados com nome</h2>
+<p>O objeto agrupa pares de chave e valor entre chaves:</p>
+<pre>const rota = {
+    url: '#sobre',
+    label: 'Sobre',
+    pagina: sobre
+}</pre>
+<p>Este objeto existe de verdade no arquivo <code>sobre.js</code> do projeto. Ele descreve tudo que o roteador precisa saber sobre a página Sobre: o endereço (<code>url</code>), o texto do menu (<code>label</code>) e a função que desenha a página (<code>pagina</code>). Repare que um valor pode ser até uma função, e isso é fundamental para a nossa arquitetura.</p>
+<p>Acessamos os valores de duas formas:</p>
+<pre>// notação de ponto, quando sabemos o nome da chave
+console.log(rota.url);      // "#sobre"
+console.log(rota.label);    // "Sobre"
+
+// notação de colchetes, quando o nome da chave está em uma variável
+const chave = "url";
+console.log(rota[chave]);   // "#sobre"</pre>
+<p>A notação de colchetes parece exótica até você ver o roteador usando ela:</p>
+<pre>mapaDeRotas[rota.url] = rota;   // cria a chave dinamicamente
+const rotaAtual = mapaDeRotas[hash];  // busca pela variável hash</pre>
+<p>Sem a notação de colchetes não haveria roteamento dinâmico.</p>
+<h2>Arrays: dados em fila</h2>
+<p>O array guarda uma lista ordenada de valores entre colchetes, acessados pela posição, que começa em zero:</p>
+<pre>const frutas = ["maçã", "banana", "uva"];
+console.log(frutas[0]);       // "maçã"
+console.log(frutas.length);   // 3</pre>
+<h2>A combinação poderosa: array de objetos</h2>
+<p>O padrão que mais aparece em aplicações reais é a lista de coisas estruturadas, ou seja, um array de objetos. É assim que a página de Serviços descreve seus cards:</p>
+<pre>const detalhes = [
+    {
+        titulo: 'Jogo das quartas de final da copa do mundo de 2002',
+        descricao: 'xxxxxxxx xxxxxxxxx xxxxx',
+        imagem: 'src/img/2002_1.webp'
+    },
+    {
+        titulo: 'Camisa azul',
+        descricao: 'xxxxxxxx xxxxxxxxx xxxxx',
+        imagem: 'src/img/2002_3.jpg'
+    }
+]</pre>
+<p>E é exatamente assim que o arquivo <code>rotas.js</code> descreve a aplicação inteira: um array em que cada item é o objeto de uma página:</p>
+<pre>import home from '../paginas/home.js'
+import servicos from '../paginas/servicos.js'
+import sobre from '../paginas/sobre.js'
+import contato from '../paginas/contato.js'
+import telaCadastro from '../paginas/formCad.js'
+
+const roteador = [
+    home,
+    telaCadastro,
+    sobre,
+    servicos,
+    contato,
+]
+
+export default roteador;</pre>
+<p>Para acessar dados aninhados, encadeamos as notações:</p>
+<pre>console.log(detalhes[1].titulo);   // "Camisa azul"
+console.log(roteador[0].url);      // "#home"</pre>
+<p>Leia de dentro para fora: pegue o item da posição 1 do array, depois a chave <code>titulo</code> desse objeto.</p>
+<h2>Métodos de array: o .map() da navbar</h2>
+<p>Arrays vêm com métodos prontos que recebem uma função e aplicam a cada item. O mais importante do nosso projeto é o <code>.map()</code>, que transforma cada item em outra coisa e devolve um array novo do mesmo tamanho.</p>
+<p>A navbar usa o <code>.map()</code> para transformar cada rota em um item de menu:</p>
+<pre>function navbar(item_menu){
+    const navbar = document.getElementById('navbar');
+    navbar.innerHTML = `&lt;nav class="bem-navbar"&gt;
+            &lt;a href="#" class="bem-navbar__brand"&gt;Brand&lt;/a&gt;
+            &lt;ul class="bem-navbar__menu"&gt;
+                ${
+                    item_menu.map((item)=&gt;{
+                        return `&lt;li class="bem-navbar__item"&gt;
+                            &lt;a href="${item.url}" class="bem-navbar__link"&gt;${item.label}&lt;/a&gt;
+                        &lt;/li&gt;`
+                    })
+                }
+            &lt;/ul&gt;
+        &lt;/nav&gt;`.replaceAll(',','');
+}</pre>
+<p>O raciocínio: o array <code>roteador</code> entra, o <code>.map()</code> transforma cada objeto de rota na string de um <code>&lt;li&gt;</code>, e a template string interpola o resultado dentro do <code>&lt;ul&gt;</code>. Adicionou uma rota nova no <code>rotas.js</code>? O menu ganha o item automaticamente, sem tocar na navbar. Isso é programar orientado a dados.</p>
+<p>Detalhe de aula que rendeu boa discussão: quando um array é interpolado numa template string, o JavaScript junta os itens separando por vírgula. Por isso o <code>.replaceAll(',','')</code> no final, que remove as vírgulas indesejadas entre os <code>&lt;li&gt;</code>. Uma alternativa mais elegante é usar <code>.join('')</code> no resultado do map, que junta sem separador:</p>
+<pre>item_menu.map((item) =&gt; `&lt;li&gt;...&lt;/li&gt;`).join('')</pre>
+<p>Outros métodos que valem conhecer:</p>
+<pre>const numeros = [1, 2, 3, 4, 5];
+
+// filter: devolve só os itens que passam no teste
+const pares = numeros.filter((n) =&gt; n % 2 === 0);   // [2, 4]
+
+// find: devolve o primeiro item que passa no teste
+const maiorQueTres = numeros.find((n) =&gt; n &gt; 3);    // 4
+
+// forEach: executa algo para cada item, sem devolver nada
+numeros.forEach((n) =&gt; console.log(n));
+
+// push: adiciona no final
+numeros.push(6);</pre>
+<h2>O objeto como mapa de consulta</h2>
+<p>Fechamos o capítulo com a jogada mais inteligente do roteador. Buscar uma rota dentro de um array exigiria percorrer item por item. Em vez disso, convertemos o array em um objeto onde a chave é a própria url:</p>
+<pre>const mapaDeRotas = {}
+for (const rota of roteador) {
+    mapaDeRotas[rota.url] = rota
+}</pre>
+<p>O resultado é um objeto assim:</p>
+<pre>{
+    "#home": { url: "#home", label: "Home", pagina: home },
+    "#sobre": { url: "#sobre", label: "Sobre", pagina: sobre },
+    // ...
+}</pre>
+<p>Agora encontrar a rota do hash atual é acesso direto, <code>mapaDeRotas[hash]</code>, sem laço nenhum. Essa técnica de indexar dados por uma chave é usada em sistemas do mundo inteiro.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>Objetos agrupam dados com nome (chave e valor); arrays guardam listas ordenadas</li>
+<li>A notação de colchetes permite chaves dinâmicas, e é ela que viabiliza o roteador</li>
+<li>O array de objetos é o padrão central do projeto: <code>detalhes</code> nos serviços e <code>roteador</code> nas rotas</li>
+<li>O <code>.map()</code> transforma dados em HTML e faz o menu se montar sozinho a partir das rotas</li>
+<li>Converter um array em objeto de consulta (<code>mapaDeRotas</code>) troca busca por acesso direto</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Crie um array de objetos com quatro livros (titulo, autor, preco) e imprima o título do terceiro livro.</li>
+<li>Use <code>.map()</code> para gerar um array de strings no formato "Titulo custa R$ preco".</li>
+<li>Use <code>.filter()</code> para obter só os livros com preço abaixo de 50.</li>
+<li>Transforme o array de livros em um objeto indexado pelo título, seguindo o padrão do <code>mapaDeRotas</code>.</li>
+<li>Adicione uma nova rota fictícia ao array <code>roteador</code> do projeto e observe o menu ganhar o item sozinho.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Trabalhando com objetos: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Working_with_objects</li>
+<li>MDN Web Docs, Array: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array</li>
+<li>MDN Web Docs, Array.prototype.map(): https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/map</li>
+<li>W3Schools, JavaScript Objects: https://www.w3schools.com/js/js_objects.asp</li>
+<li>W3Schools, JavaScript Arrays: https://www.w3schools.com/js/js_arrays.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap06">Capítulo 6: Funções, com retorno e sem retorno</h1>
+<h2>Empacotando comportamento</h2>
+<p>Se variáveis guardam valores, funções guardam comportamento. Uma função é um bloco de código com nome que pode ser executado quantas vezes quisermos, de onde quisermos. No App Livros, cada página é uma função, o roteador é uma função, a captura do formulário é uma função. Dominar funções é dominar o projeto.</p>
+<h2>Declarando e chamando</h2>
+<pre>// declaração
+function saudacao() {
+    console.log("Bem-vindo ao App Livros");
+}
+
+// chamada (execução)
+saudacao();
+saudacao(); // pode chamar quantas vezes quiser</pre>
+<p>Atenção para a diferença entre a função e a chamada dela. <code>saudacao</code> (sem parênteses) é a função em si, um valor que pode ser guardado e passado adiante. <code>saudacao()</code> (com parênteses) executa a função agora. Essa diferença é vital no projeto: quando escrevemos <code>pagina: sobre</code> no objeto de rota, passamos a função sem executar, para o roteador executar depois, na hora certa.</p>
+<h2>Parâmetros: dando entrada para a função</h2>
+<p>Parâmetros tornam a função reutilizável para dados diferentes:</p>
+<pre>function saudacao(nome) {
+    console.log(`Bem-vindo, ${nome}`);
+}
+
+saudacao("Ana");    // Bem-vindo, Ana
+saudacao("Bruno");  // Bem-vindo, Bruno</pre>
+<p>No projeto, as funções de página recebem o elemento onde devem se montar:</p>
+<pre>function sobre(app){
+    const sobre = `&lt;h1&gt; Esta é página Sobre &lt;/h1&gt;
+    &lt;p&gt;Este site é um exemplo de SPA usando JavaScript puro&lt;/p&gt;
+    `
+    app.innerHTML = sobre
+}</pre>
+<p>Quem fornece o <code>app</code> é o roteador, na linha <code>rotaAtual.pagina(app)</code>. A página não precisa saber onde vai ser montada; ela recebe o destino de fora. Esse desacoplamento é o que torna cada página um componente independente.</p>
+<h2>Funções com retorno</h2>
+<p>Uma função pode devolver um valor para quem a chamou, usando <code>return</code>:</p>
+<pre>function somar(a, b) {
+    return a + b;
+}
+
+const total = somar(2, 3);   // total vale 5</pre>
+<p>O <code>return</code> também encerra a função na hora: nada depois dele executa.</p>
+<p>No projeto, a função <code>cadastroCliente</code> do formulário de CEP é uma função com retorno. Ela busca os dados na API e devolve o resultado para quem chamou:</p>
+<pre>async function cadastroCliente(cep){
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const result = await response.json();
+        return result
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// quem chama recebe o retorno:
+const dados = await cadastroCliente(event.target.value)</pre>
+<h2>Funções sem retorno</h2>
+<p>Nem toda função devolve algo. Muitas existem pelo efeito que causam: desenhar na tela, registrar um evento, imprimir no console. Chamamos isso de efeito colateral. Quando não há <code>return</code>, a função devolve <code>undefined</code> automaticamente.</p>
+<p>A função <code>sobre</code> acima é um exemplo: ela não devolve nada, seu trabalho é alterar o <code>innerHTML</code> do elemento. A <code>navbar</code> também: recebe as rotas e desenha o menu. Compare:</p>
+<ul><li>Com retorno: <code>cadastroCliente(cep)</code> calcula e entrega um valor, quem chamou decide o que fazer</li>
+<li>Sem retorno: <code>sobre(app)</code> age diretamente sobre a página, não entrega nada</li></ul>
+<p>Saber classificar suas funções nessas duas famílias ajuda muito na hora de montar o quebra-cabeça de um sistema.</p>
+<h2>Arrow functions</h2>
+<p>Desde 2015 existe uma sintaxe curta, a arrow function, muito usada em callbacks:</p>
+<pre>// função tradicional
+function dobrar(n) {
+    return n * 2;
+}
+
+// arrow equivalente
+const dobrar = (n) =&gt; {
+    return n * 2;
+}
+
+// arrow compacta: sem chaves, o retorno é implícito
+const dobrar = (n) =&gt; n * 2;</pre>
+<p>No projeto elas aparecem em vários pontos:</p>
+<pre>// no map da navbar
+item_menu.map((item)=&gt;{
+    return `&lt;li class="bem-navbar__item"&gt;
+        &lt;a href="${item.url}" class="bem-navbar__link"&gt;${item.label}&lt;/a&gt;
+    &lt;/li&gt;`
+})
+
+// na rota 404, com retorno implícito
+const rota404 = { pagina: () =&gt; `&lt;div&gt; Página não encontrada 404 &lt;/div&gt;` }
+
+// no listener de mudança de hash
+window.addEventListener("hashchange", ()=&gt;{
+    hash = window.location.hash;
+    render();
+})</pre>
+<h2>Funções como valores: o coração da arquitetura</h2>
+<p>Aqui está o conceito mais importante do capítulo. Em JavaScript, função é um valor como outro qualquer: pode ser guardada em variável, colocada dentro de objeto e passada como argumento para outra função (quando passada assim, chamamos de callback).</p>
+<p>Olhe de novo o objeto que cada página exporta:</p>
+<pre>export default {
+    url: '#sobre',
+    label: 'Sobre',
+    pagina: sobre
+}</pre>
+<p>A chave <code>pagina</code> guarda a função <code>sobre</code> sem executar. O roteador guarda todos esses objetos no <code>mapaDeRotas</code> e, só quando o usuário navega, executa a função da rota atual:</p>
+<pre>async function render(){
+    const rotaAtual = mapaDeRotas[hash] || rota404
+    await rotaAtual.pagina(app)
+}</pre>
+<p>Pare e aprecie: o roteador não conhece nenhuma página especificamente. Ele só sabe que toda rota tem uma função <code>pagina</code> que recebe o <code>app</code>. Esse contrato entre as partes é o que permite adicionar páginas novas sem tocar no roteador. Em engenharia de software isso se chama inversão de controle, e você acabou de implementar uma.</p>
+<h2>Escopo: onde cada variável enxerga</h2>
+<p>Variáveis declaradas dentro de uma função só existem dentro dela:</p>
+<pre>function contato(app) {
+    const paginadecontato = `...`;  // só existe aqui dentro
+    app.innerHTML = paginadecontato;
+}
+console.log(paginadecontato); // erro: não existe aqui fora</pre>
+<p>Já variáveis declaradas fora, no escopo do módulo, são visíveis pelas funções de dentro, como o array <code>detalhes</code> que a função <code>servicos</code> usa. A regra prática: declare cada variável no menor escopo possível.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>Funções empacotam comportamento reutilizável; parâmetros são suas entradas, <code>return</code> é sua saída</li>
+<li>Função sem parênteses é valor, com parênteses é execução; o roteador depende dessa diferença</li>
+<li>Funções com retorno entregam valores (<code>cadastroCliente</code>), funções sem retorno causam efeitos (<code>sobre</code>, <code>navbar</code>)</li>
+<li>Arrow functions são a forma curta, dominante em callbacks</li>
+<li>Guardar funções em objetos (<code>pagina: sobre</code>) e executá-las depois é a base da arquitetura de rotas do projeto</li>
+<li>Cada variável deve viver no menor escopo possível</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Escreva uma função com retorno que recebe um preço e devolve o valor com 10 por cento de desconto.</li>
+<li>Escreva uma função sem retorno que recebe um texto e o insere em um elemento da página via <code>innerHTML</code>.</li>
+<li>Converta as duas para arrow functions.</li>
+<li>Crie um objeto <code>botao</code> com as chaves <code>label</code> e <code>aoClicar</code>, onde <code>aoClicar</code> é uma função. Depois execute <code>botao.aoClicar()</code>.</li>
+<li>Crie uma nova página para o projeto seguindo o padrão: função que recebe <code>app</code> e objeto exportado com <code>url</code>, <code>label</code> e <code>pagina</code>.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Funções: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Functions</li>
+<li>MDN Web Docs, Arrow functions: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions</li>
+<li>MDN Web Docs, Callbacks: https://developer.mozilla.org/pt-BR/docs/Glossary/Callback_function</li>
+<li>W3Schools, JavaScript Functions: https://www.w3schools.com/js/js_functions.asp</li>
+<li>W3Schools, JavaScript Function Parameters: https://www.w3schools.com/js/js_function_parameters.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap07">Capítulo 7: DOM e eventos de escuta</h1>
+<h2>O JavaScript conversa com a página</h2>
+<p>Até aqui aprendemos a linguagem. Agora vamos ao motivo de ela existir no navegador: manipular a página e reagir ao usuário. A ponte entre o JavaScript e o HTML se chama DOM, Document Object Model. O navegador lê o HTML e monta na memória uma árvore de objetos representando cada elemento. O JavaScript enxerga e altera essa árvore através do objeto global <code>document</code>.</p>
+<h2>Encontrando elementos</h2>
+<p>O método que usamos o curso inteiro é o <code>getElementById</code>:</p>
+<pre>const app = document.getElementById('app');
+const formulario = document.getElementById('formulario-de-contato');
+const campocep = document.getElementById("cep");</pre>
+<p>Ele devolve o objeto que representa o elemento com aquele id. Existem outros seletores que valem conhecer:</p>
+<pre>document.querySelector('.bem-card');      // primeiro elemento que casa com o seletor CSS
+document.querySelectorAll('.bem-card');   // todos os que casam</pre>
+<h2>Alterando a página: innerHTML e textContent</h2>
+<p>Encontrado o elemento, podemos trocar seu conteúdo. O <code>innerHTML</code> interpreta a string como HTML, e é assim que todas as nossas páginas se desenham:</p>
+<pre>function sobre(app){
+    const sobre = `&lt;h1&gt; Esta é página Sobre &lt;/h1&gt;
+    &lt;p&gt;Este site é um exemplo de SPA usando JavaScript puro&lt;/p&gt;
+    `
+    app.innerHTML = sobre
+}</pre>
+<p>Já o <code>textContent</code> insere texto puro, sem interpretar tags. Usamos ele na lista de contatos, e a escolha não é por acaso: como o texto vem do usuário, inserir como texto puro impede que alguém digite HTML ou script malicioso no formulário e ele seja executado na página. Isso previne um ataque conhecido como XSS. Regra prática: conteúdo que você controla pode ir de <code>innerHTML</code>; conteúdo digitado pelo usuário vai de <code>textContent</code>.</p>
+<h2>Criando elementos</h2>
+<p>Além de escrever HTML em string, dá para criar elementos um a um:</p>
+<pre>const lista = document.getElementById('lista_de_contatos');
+const li = document.createElement('li');
+li.textContent = "novo contato";
+lista.appendChild(li);</pre>
+<p>É exatamente o que a página de Contato faz a cada envio do formulário: cria um <code>&lt;li&gt;</code>, preenche e anexa na lista.</p>
+<h2>Eventos: a página avisa, o código escuta</h2>
+<p>O navegador dispara eventos o tempo todo: clique, tecla pressionada, formulário enviado, campo que perdeu o foco, hash da URL que mudou. Nós registramos funções para serem chamadas quando o evento acontecer. Essas funções são os ouvintes (listeners), e o registro é feito com <code>addEventListener</code>:</p>
+<pre>elemento.addEventListener("nomeDoEvento", funcaoQueReage);</pre>
+<p>Repare: passamos a função sem parênteses. Não estamos executando agora; estamos entregando a função para o navegador executar quando o evento ocorrer. É o conceito de callback do capítulo anterior em ação.</p>
+<h2>Os três eventos do projeto</h2>
+<h3>submit: o formulário de contato</h3>
+<pre>async function capturarFormulario(){
+    const formulario = document.getElementById('formulario-de-contato');
+    formulario.addEventListener("submit", function(event){
+        event.preventDefault();
+        const lista = document.getElementById('lista_de_contatos');
+        const li = document.createElement('li');
+        const assunto = event.target[0].value;
+        const email = event.target[1].value;
+        const mensagem = event.target[2].value;
+        li.textContent = `O Assunto é ${assunto}
+         e o email é ${email}
+         e a mensagem é ${mensagem}`;
+        lista.appendChild(li);
+        event.target[0].value = '';
+        event.target[1].value = '';
+        event.target[2].value = '';
+    })
+}</pre>
+<p>Três pontos para destrinchar:</p>
+<ol><li>O parâmetro <code>event</code> é um objeto que o navegador entrega para o ouvinte com tudo sobre o evento ocorrido.</li>
+<li><code>event.preventDefault()</code> cancela o comportamento padrão. O padrão do submit é recarregar a página, e recarregar mataria a nossa SPA. Essa linha é obrigatória em formulários de SPA.</li>
+<li><code>event.target</code> é o elemento que disparou o evento, no caso o formulário. Os índices <code>[0]</code>, <code>[1]</code>, <code>[2]</code> acessam os campos na ordem. Também poderíamos usar <code>document.getElementById('assunto').value</code>, como está registrado nos comentários do arquivo.</li></ol>
+<h3>blur: o CEP que se completa sozinho</h3>
+<p>O evento <code>blur</code> dispara quando um campo perde o foco, ou seja, quando o usuário clica fora dele depois de digitar. Na tela de cadastro, é o gatilho perfeito para buscar o endereço assim que a pessoa termina de digitar o CEP:</p>
+<pre>async function capturacep(){
+    const campocep = document.getElementById("cep")
+    campocep.addEventListener("blur", async (event)=&gt;{
+        const dados = await cadastroCliente(event.target.value)
+        document.getElementById("logradouro").value = dados.logradouro
+        document.getElementById("bairro").value = dados.bairro
+        document.getElementById("localidade").value = dados.localidade
+        document.getElementById("estado").value = dados.estado
+    })
+}</pre>
+<p>Aqui <code>event.target.value</code> é o texto digitado no campo de CEP. Os detalhes do <code>async</code> e do <code>await</code> ficam para os Capítulos 10 e 11; por ora, registre o padrão: evento dispara, ouvinte lê o valor, busca os dados e preenche os outros campos.</p>
+<h3>hashchange: a navegação da SPA</h3>
+<p>O terceiro evento não vem de um elemento, mas da própria janela. O <code>hashchange</code> dispara toda vez que a parte após o <code>#</code> da URL muda:</p>
+<pre>window.addEventListener("hashchange", ()=&gt;{
+    hash = window.location.hash;
+    render();
+})</pre>
+<p>Este ouvinte é literalmente o motor da navegação do App Livros: usuário clica no menu, o hash muda, o evento dispara, o roteador redesenha a página. O Capítulo 9 é inteiro sobre ele.</p>
+<h2>Uma armadilha clássica da SPA</h2>
+<p>Atenção a um detalhe de ordem que pegou a turma em aula: só dá para registrar um ouvinte em um elemento que já existe no DOM. Como nossas páginas são desenhadas dinamicamente, o <code>addEventListener</code> do formulário precisa rodar depois do <code>innerHTML</code> que cria o formulário:</p>
+<pre>async function contato(app) {
+    const paginadecontato = `... o formulário ...`
+    app.innerHTML = paginadecontato;   // primeiro desenha
+    await capturarFormulario()          // depois escuta
+}</pre>
+<p>Se invertermos a ordem, <code>getElementById</code> devolve <code>null</code> e o código quebra. Guarde esse padrão: desenhar primeiro, escutar depois. Ele é o motivo de cada página chamar sua própria função de eventos no final.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>O DOM é a representação da página que o JavaScript manipula via <code>document</code></li>
+<li><code>getElementById</code> encontra elementos; <code>innerHTML</code> desenha HTML; <code>textContent</code> insere texto seguro</li>
+<li><code>addEventListener(evento, callback)</code> registra funções que reagem ao usuário</li>
+<li><code>event.preventDefault()</code> impede o recarregamento no submit e mantém a SPA viva</li>
+<li><code>event.target</code> dá acesso ao elemento que disparou o evento e seus valores</li>
+<li>O projeto usa <code>submit</code> (contato), <code>blur</code> (CEP) e <code>hashchange</code> (navegação)</li>
+<li>Ordem obrigatória em páginas dinâmicas: desenhar primeiro, escutar depois</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Adicione um botão na página Home e um ouvinte de <code>click</code> que imprime uma mensagem no console.</li>
+<li>No formulário de contato, adicione uma validação: se o assunto estiver vazio, não adicione o item na lista.</li>
+<li>Adicione um ouvinte de <code>input</code> no campo de mensagem que mostra em tempo real quantos caracteres foram digitados.</li>
+<li>Experimente remover o <code>event.preventDefault()</code> do formulário e observe o que acontece com a página. Depois devolva a linha.</li>
+<li>Explique com suas palavras por que o <code>capturarFormulario</code> precisa ser chamado depois do <code>innerHTML</code>.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Introdução ao DOM: https://developer.mozilla.org/pt-BR/docs/Web/API/Document_Object_Model/Introduction</li>
+<li>MDN Web Docs, addEventListener: https://developer.mozilla.org/pt-BR/docs/Web/API/EventTarget/addEventListener</li>
+<li>MDN Web Docs, Event.preventDefault: https://developer.mozilla.org/pt-BR/docs/Web/API/Event/preventDefault</li>
+<li>W3Schools, JavaScript HTML DOM: https://www.w3schools.com/js/js_htmldom.asp</li>
+<li>W3Schools, JavaScript Events: https://www.w3schools.com/js/js_events.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap08">Capítulo 8: ES Modules e componentização</h1>
+<h2>Do arquivo único ao projeto organizado</h2>
+<p>Nas primeiras aulas todo o código cabia em um arquivo. Mas o projeto cresceu: navbar, cinco páginas, rotas, roteador. Manter tudo junto vira um arquivo gigante onde ninguém acha nada e todo mundo esbarra em todo mundo. A solução do JavaScript moderno são os ES Modules: cada arquivo é um módulo que declara o que oferece (export) e o que precisa (import).</p>
+<h2>Ativando os módulos</h2>
+<p>Basta um atributo no script do <code>index.html</code>:</p>
+<pre>&lt;script src="src/js/main.js" type="module"&gt;&lt;/script&gt;</pre>
+<p>Com <code>type="module"</code>, o navegador entende os comandos <code>import</code> e <code>export</code> e carrega os arquivos em cadeia a partir do <code>main.js</code>. É por causa desse atributo que o projeto exige um servidor HTTP, como vimos no Capítulo 1.</p>
+<h2>export default e import</h2>
+<p>Cada arquivo de página do projeto termina exportando seu objeto de rota:</p>
+<pre>// sobre.js
+function sobre(app){
+    const sobre = `&lt;h1&gt; Esta é página Sobre &lt;/h1&gt;
+    &lt;p&gt;Este site é um exemplo de SPA usando JavaScript puro&lt;/p&gt;
+    `
+    app.innerHTML = sobre
+}
+
+export default {
+    url: '#sobre',
+    label: 'Sobre',
+    pagina: sobre
+}</pre>
+<p>O <code>export default</code> diz: quando alguém importar este arquivo, entregue este valor. E quem importa escolhe o nome que quiser para recebê-lo:</p>
+<pre>// rotas.js
+import home from '../paginas/home.js'
+import servicos from '../paginas/servicos.js'
+import sobre from '../paginas/sobre.js'
+import contato from '../paginas/contato.js'
+import telaCadastro from '../paginas/formCad.js'
+
+const roteador = [
+    home,
+    telaCadastro,
+    sobre,
+    servicos,
+    contato,
+]
+
+export default roteador;</pre>
+<p>Repare no detalhe dos caminhos: <code>../paginas/home.js</code> significa "suba uma pasta e entre em paginas". Caminhos relativos com <code>./</code> e <code>../</code> são obrigatórios nos imports do navegador, e a extensão <code>.js</code> também.</p>
+<p>Além do default, existe o export nomeado, útil quando um arquivo oferece várias coisas:</p>
+<pre>// exportando
+export function formatar() { ... }
+export const VERSAO = "1.0";
+
+// importando com chaves e o nome exato
+import { formatar, VERSAO } from './utilitarios.js';</pre>
+<p>No projeto usamos <code>export default</code> porque cada arquivo de componente entrega uma coisa só.</p>
+<h2>O que é um componente</h2>
+<p>Componente é um pedaço autocontido da interface: ele sabe se desenhar e sabe reagir aos seus próprios eventos. No App Livros, cada página é um componente que segue o mesmo contrato:</p>
+<ol><li>Uma função que recebe o elemento <code>app</code> e se desenha nele via <code>innerHTML</code></li>
+<li>Se a página tem interatividade, ela mesma registra seus ouvintes depois de se desenhar</li>
+<li>Um <code>export default</code> de objeto com <code>url</code>, <code>label</code> e <code>pagina</code></li></ol>
+<p>Veja o contrato completo na tela de cadastro:</p>
+<pre>async function telaCadastro(app){
+    const formulario = `
+    &lt;form id="cadastroCliente" &gt;
+        &lt;label for="cep"&gt;CEP&lt;/label&gt;
+        &lt;input type="text" id="cep"&gt;
+        &lt;label for="logradouro"&gt;logradouro&lt;/label&gt;
+        &lt;input type="text" id="logradouro"&gt;
+        &lt;label for="bairro"&gt;bairro&lt;/label&gt;
+        &lt;input type="text" id="bairro"&gt;
+        &lt;label for="localidade"&gt;localidade&lt;/label&gt;
+        &lt;input type="text" id="localidade"&gt;
+        &lt;label for="estado"&gt;estado&lt;/label&gt;
+        &lt;input type="text" id="estado"&gt;
+    &lt;/form&gt;
+    `
+    app.innerHTML = formulario;
+    await capturacep()
+}
+
+export default {
+    url: '#cep',
+    label: 'Cadastro',
+    pagina: telaCadastro
+}</pre>
+<h2>A evolução para o componente auto montável</h2>
+<p>Vale registrar a história dessa arquitetura, porque ela evoluiu entre as aulas e o histórico do Git guarda os dois momentos.</p>
+<p>Na primeira versão, as funções de página apenas devolviam a string de HTML, e o roteador fazia o <code>innerHTML</code> e depois executava uma <code>acao</code> separada para registrar os eventos:</p>
+<pre>// versão antiga (registrada nos comentários do main.js)
+app.innerHTML = rotaAtual.pagina()
+if (typeof mapaDeRotas[hash].acao === 'function') {
+    await mapaDeRotas[hash].acao()
+}</pre>
+<p>Funcionava, mas o conhecimento sobre a página ficava espalhado: o roteador precisava saber que existia uma <code>acao</code> e lembrar de chamá-la. Na refatoração (commit "componente auto montavel"), invertemos: a função da página passou a receber o <code>app</code> e cuidar de tudo sozinha, desenho e eventos. O roteador encolheu para uma linha:</p>
+<pre>// versão atual
+await rotaAtual.pagina(app)</pre>
+<p>Essa é uma lição de arquitetura que vai muito além deste projeto: cada componente deve ser dono do seu próprio ciclo de vida. Quem usa o componente não precisa conhecer seus detalhes internos. É o mesmo princípio dos componentes do React e do Vue.</p>
+<h2>A navbar orientada a dados</h2>
+<p>A navbar é o componente que amarra tudo. Ela não conhece nenhuma página; recebe o array de rotas e desenha um link para cada uma:</p>
+<pre>// main.js
+import navbar from "./components/navbar/navbar.js";
+import roteador from "./components/rotas/rotas.js";
+navbar(roteador);</pre>
+<p>O fluxo completo de dependências do projeto fica assim:</p>
+<pre>index.html
+   carrega main.js
+      importa rotas.js  (que importa todas as paginas)
+      importa navbar.js (que desenha o menu a partir das rotas)
+      monta o mapaDeRotas e escuta o hashchange</pre>
+<p>Quer criar uma página nova? O passo a passo é sempre o mesmo, e não toca em nenhum arquivo existente além do <code>rotas.js</code>:</p>
+<ol><li>Crie <code>src/js/components/paginas/minhapagina.js</code> seguindo o contrato</li>
+<li>Importe e adicione no array do <code>rotas.js</code></li>
+<li>Pronto: o menu ganha o link e a rota funciona</li></ol>
+<h2>Organização de pastas e nomenclatura</h2>
+<p>A regra do projeto: uma pasta por componente, dentro de <code>components</code>. O CSS segue a metodologia BEM (Block, Element, Modifier), visível nas classes como <code>bem-navbar__item</code> e <code>bem-card__title</code>: o bloco é o componente, o elemento vem após dois underlines, e modificadores após dois hífens (<code>bem-btn--primary</code>). Essa disciplina de nomes evita que o estilo de um componente vaze para outro.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>ES Modules dividem o projeto em arquivos com <code>import</code> e <code>export</code>, ativados pelo <code>type="module"</code></li>
+<li><code>export default</code> entrega o valor principal do arquivo; caminhos relativos e extensão <code>.js</code> são obrigatórios</li>
+<li>Componente é um pedaço autocontido: se desenha e escuta seus próprios eventos</li>
+<li>O contrato das páginas: função que recebe <code>app</code> mais objeto com <code>url</code>, <code>label</code> e <code>pagina</code></li>
+<li>A refatoração para componentes auto montáveis simplificou o roteador para uma linha</li>
+<li>Adicionar página nova não exige tocar no roteador nem na navbar</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Crie um componente <code>footer</code> que desenha um rodapé e importe no <code>main.js</code>.</li>
+<li>Crie uma página nova "Autores" seguindo o contrato completo e registre no <code>rotas.js</code>.</li>
+<li>Desenhe no papel o diagrama de imports do projeto, seta por seta, começando do <code>index.html</code>.</li>
+<li>Compare no Git as duas versões do roteador (antes e depois do commit "componente auto montavel") e escreva um parágrafo sobre o que melhorou.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Módulos JavaScript: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Modules</li>
+<li>MDN Web Docs, import: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Statements/import</li>
+<li>MDN Web Docs, export: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Statements/export</li>
+<li>W3Schools, JavaScript Modules: https://www.w3schools.com/js/js_modules.asp</li>
+<li>Metodologia BEM: https://getbem.com/</li></ul></div>
+<div class="capitulo"><h1 id="cap09">Capítulo 9: SPA e roteamento por hash</h1>
+<h2>O capítulo que junta tudo</h2>
+<p>Este é o capítulo em que todas as peças anteriores se encaixam: objetos e arrays (as rotas), funções como valores (as páginas), eventos (o hashchange), laços (o mapa de rotas) e condicionais (a rota 404). Ao final, você vai entender cada linha do <code>main.js</code>, o arquivo mais importante do projeto.</p>
+<h2>O problema: navegar sem recarregar</h2>
+<p>Em um site tradicional, cada clique em um link pede uma página nova ao servidor, e o navegador recarrega tudo: HTML, CSS, scripts. Em uma SPA queremos trocar só o conteúdo, instantaneamente, mantendo o estado da aplicação. Mas então surge a pergunta: se a página nunca muda, como o usuário navega? Como o botão voltar funciona? Como se compartilha o link de uma seção?</p>
+<p>A resposta clássica é o hash da URL.</p>
+<h2>O que é o hash</h2>
+<p>O hash é tudo que vem depois do <code>#</code> em uma URL:</p>
+<pre>http://localhost:8000/#sobre
+                      ^^^^^^ isto é o hash</pre>
+<p>O hash tem duas propriedades perfeitas para uma SPA:</p>
+<ol><li>Mudar o hash não recarrega a página. O navegador entende o <code>#</code> como uma âncora interna</li>
+<li>Mudar o hash dispara o evento <code>hashchange</code> e entra no histórico do navegador, então os botões voltar e avançar funcionam de graça</li></ol>
+<p>O JavaScript lê o hash atual em <code>window.location.hash</code>. Se a URL é <code>#contato</code>, esse valor é a string <code>"#contato"</code>.</p>
+<p>É por isso que todos os links do nosso menu apontam para hashes:</p>
+<pre>&lt;a href="#sobre" class="bem-navbar__link"&gt;Sobre&lt;/a&gt;</pre>
+<p>Clicou, o hash muda, evento dispara, nós redesenhamos. Nenhuma requisição ao servidor.</p>
+<h2>O main.js linha por linha</h2>
+<p>Este é o arquivo completo do roteador. Vamos dissecar:</p>
+<pre>import navbar from "./components/navbar/navbar.js";
+import roteador from "./components/rotas/rotas.js";
+navbar(roteador);
+
+const app = document.getElementById('app');
+
+const mapaDeRotas = {}
+for (const rota of roteador) {
+    mapaDeRotas[rota.url] = rota
+}
+
+let hash = window.location.hash || '#inicio';
+render();
+
+window.addEventListener("hashchange", () =&gt; {
+    hash = window.location.hash;
+    render();
+})
+
+const rota404 = { pagina: () =&gt; `&lt;div&gt; Página não encontrada 404 &lt;/div&gt;` }
+
+async function render() {
+    const rotaAtual = mapaDeRotas[hash] || rota404
+    await rotaAtual.pagina(app)
+}</pre>
+<h3>Passo 1: montar o menu</h3>
+<pre>navbar(roteador);</pre>
+<p>Entregamos o array de rotas para a navbar, que desenha um link para cada uma com <code>.map()</code>, como vimos no Capítulo 5. O menu nasce dos mesmos dados que o roteador usa; uma fonte única de verdade.</p>
+<h3>Passo 2: capturar o palco</h3>
+<pre>const app = document.getElementById('app');</pre>
+<p>Guardamos a referência ao <code>&lt;main id="app"&gt;</code>, o palco onde toda página se apresenta.</p>
+<h3>Passo 3: indexar as rotas</h3>
+<pre>const mapaDeRotas = {}
+for (const rota of roteador) {
+    mapaDeRotas[rota.url] = rota
+}</pre>
+<p>O array vira um objeto indexado pela url. Nas aulas usamos vários <code>console.log</code> para enxergar essa transformação, e vale repetir o exercício:</p>
+<pre>console.log(mapaDeRotas)
+console.log(mapaDeRotas["#home"])
+console.log(mapaDeRotas["#home"].pagina)</pre>
+<p>O primeiro mostra o objeto completo, o segundo mostra uma rota, o terceiro mostra a função da página (sem executar). Encadear logs assim é uma técnica de estudo excelente para entender estruturas.</p>
+<h3>Passo 4: descobrir onde estamos</h3>
+<pre>let hash = window.location.hash || '#inicio';
+render();</pre>
+<p>Na primeira carga, lemos o hash da URL. Se estiver vazio (usuário abriu a raiz do site), o <code>||</code> entrega o padrão <code>'#inicio'</code>. Em seguida renderizamos pela primeira vez. Sem esse <code>render()</code> inicial, a página abriria em branco até o primeiro clique.</p>
+<h3>Passo 5: escutar a navegação</h3>
+<pre>window.addEventListener("hashchange", () =&gt; {
+    hash = window.location.hash;
+    render();
+})</pre>
+<p>O motor da SPA. Toda mudança de hash, seja por clique no menu, por edição manual da URL ou pelo botão voltar, atualiza a variável e redesenha.</p>
+<h3>Passo 6: renderizar com plano B</h3>
+<pre>const rota404 = { pagina: () =&gt; `&lt;div&gt; Página não encontrada 404 &lt;/div&gt;` }
+
+async function render() {
+    const rotaAtual = mapaDeRotas[hash] || rota404
+    await rotaAtual.pagina(app)
+}</pre>
+<p>A função <code>render</code> busca a rota do hash atual no mapa. Não achou? O <code>||</code> entrega a <code>rota404</code>, que segue o mesmo contrato (tem uma função <code>pagina</code>), então o resto do código nem percebe a diferença. Por fim, executamos a função da página passando o palco. Como algumas páginas são <code>async</code> (a de cadastro busca dados na API), o <code>render</code> é <code>async</code> e usa <code>await</code>, assunto do próximo capítulo.</p>
+<h2>Por que um mapa e não um switch</h2>
+<p>No Capítulo 3 prometemos voltar a esta comparação. O roteamento poderia ser um <code>switch</code>:</p>
+<pre>switch (hash) {
+    case "#home": home(app); break;
+    case "#sobre": sobre(app); break;
+    case "#contato": contato(app); break;
+    default: /* 404 */
+}</pre>
+<p>Funciona, mas cada página nova exige editar o roteador. Com o <code>mapaDeRotas</code>, o roteador é genérico: dados novos (rotas) entram sem código novo. Essa é a diferença entre programar procedimentos e programar orientado a dados, e é uma das grandes lições do curso.</p>
+<h2>Hash routing e o mundo real</h2>
+<p>Frameworks modernos usam também a History API (<code>pushState</code>), que permite URLs sem <code>#</code>, como <code>/sobre</code>. Ela exige configuração no servidor para devolver o <code>index.html</code> em qualquer caminho. O hash routing que implementamos é a técnica mais simples e robusta, funciona em qualquer servidor estático, e é inclusive o modo de compatibilidade dos roteadores do React e do Vue. Entendendo o nosso, você entende os deles.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>O hash muda a URL sem recarregar a página e dispara o evento <code>hashchange</code></li>
+<li>O roteador transforma o array de rotas em um objeto de consulta direta</li>
+<li>O fluxo: carga inicial lê o hash (com padrão via <code>||</code>), evento escuta as mudanças, <code>render</code> desenha</li>
+<li>A rota 404 segue o mesmo contrato das outras e entra pelo <code>||</code></li>
+<li>Mapa de rotas vence o switch porque adicionar páginas não exige mexer no roteador</li>
+<li>Botões voltar e avançar funcionam automaticamente porque o hash entra no histórico</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Abra o site, navegue por todas as páginas e observe a URL e o console a cada clique.</li>
+<li>Digite na URL um hash que não existe, como <code>#banana</code>, e confirme a página 404.</li>
+<li>Use os botões voltar e avançar do navegador e explique por que funcionam.</li>
+<li>Adicione um <code>console.log(hash)</code> dentro do listener de <code>hashchange</code> e observe os valores.</li>
+<li>Desafio: faça a rota 404 mostrar também um link de volta para a Home.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Window: hashchange event: https://developer.mozilla.org/pt-BR/docs/Web/API/Window/hashchange_event</li>
+<li>MDN Web Docs, Location.hash: https://developer.mozilla.org/pt-BR/docs/Web/API/Location/hash</li>
+<li>MDN Web Docs, History API: https://developer.mozilla.org/pt-BR/docs/Web/API/History_API</li>
+<li>W3Schools, Window Location: https://www.w3schools.com/js/js_window_location.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap10">Capítulo 10: Assincronismo, o tempo no JavaScript</h1>
+<h2>Um teste que muda a intuição</h2>
+<p>Começamos este assunto em aula com um experimento que deixamos registrado nos comentários do <code>main.js</code>. Antes de rodar, tente prever a ordem das mensagens:</p>
+<pre>console.log("A Primeira chamada")
+setTimeout(() =&gt; {
+    console.log("A Segunda Execução ou não?")
+})
+console.log("A Terceira execução ou não?")</pre>
+<p>A intuição diz: primeira, segunda, terceira. O que aparece no console:</p>
+<pre>A Primeira chamada
+A Terceira execução ou não?
+A Segunda Execução ou não?</pre>
+<p>A segunda mensagem foi por último, mesmo com o <code>setTimeout</code> sem tempo definido (zero milissegundos). Compare com a versão síncrona, também dos nossos testes:</p>
+<pre>console.log("B Primeira chamada")
+function sincrono() {
+    console.log("B Segunda Execução ou não?")
+}
+sincrono()
+console.log("B Terceira execução ou não?")</pre>
+<p>Aqui a ordem é a esperada: primeira, segunda, terceira. Entender por que os dois exemplos se comportam diferente é entender o assincronismo.</p>
+<h2>O event loop em uma explicação de sala</h2>
+<p>O JavaScript executa uma coisa de cada vez, em uma única fila principal. Só que o navegador tem ajudantes: temporizadores, requisições de rede, leitura de arquivos. Quando pedimos algo a um ajudante (como o <code>setTimeout</code> ou o <code>fetch</code>), o JavaScript não fica parado esperando; ele entrega a tarefa, segue executando o código atual até o fim e deixa anotado o que fazer quando o ajudante terminar (o callback).</p>
+<p>Quando o ajudante termina, o callback entra em uma fila de espera. O event loop é o porteiro que só deixa a fila de espera entrar quando a fila principal esvaziou. Por isso o <code>setTimeout</code> de zero milissegundos ainda executa por último: o código principal precisa terminar primeiro.</p>
+<p>Por que a linguagem é assim? Porque o JavaScript nasceu para o navegador, e o navegador não pode congelar. Se uma busca na rede travasse tudo por três segundos, a página ficaria três segundos sem responder a cliques. Assíncrono significa: peça, continue trabalhando, reaja quando a resposta chegar.</p>
+<h2>Você já usava assincronismo sem saber</h2>
+<p>Olhe de novo o padrão dos eventos do Capítulo 7:</p>
+<pre>formulario.addEventListener("submit", function(event) { ... })</pre>
+<p>Isso é assincronismo puro: entregamos um callback que executa em algum momento futuro, quando o usuário decidir enviar. A diferença do <code>setTimeout</code> é só quem decide o momento: lá, o relógio; aqui, o usuário.</p>
+<h2>Promises: um valor que ainda vai chegar</h2>
+<p>Callbacks funcionam, mas encadear vários (busque isso, depois aquilo, depois aquilo outro) gera um aninhamento infernal apelidado de callback hell. A solução moderna é a Promise, um objeto que representa um valor futuro. Ela está em um de três estados:</p>
+<ul><li>pending: ainda esperando</li>
+<li>fulfilled: deu certo, o valor chegou</li>
+<li>rejected: deu errado, temos um erro</li></ul>
+<p>Consumimos uma Promise com <code>.then()</code> para o sucesso e <code>.catch()</code> para o erro:</p>
+<pre>fetch("https://viacep.com.br/ws/01001000/json/")
+    .then((response) =&gt; response.json())
+    .then((dados) =&gt; console.log(dados))
+    .catch((erro) =&gt; console.error(erro));</pre>
+<h2>async e await: assíncrono com cara de síncrono</h2>
+<p>O <code>async/await</code> é uma sintaxe por cima das Promises que deixa o código com a leitura natural de cima para baixo. É o estilo que adotamos no projeto inteiro:</p>
+<ul><li><code>async</code> antes de uma função declara que ela trabalha com Promises (e faz ela sempre devolver uma Promise)</li>
+<li><code>await</code> pausa a função (só ela, não a página) até a Promise resolver, e entrega o valor</li></ul>
+<p>O mesmo exemplo acima, no estilo do projeto:</p>
+<pre>async function buscarCep(cep) {
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const result = await response.json();
+        return result
+    } catch (error) {
+        console.error(error);
+    }
+}</pre>
+<p>Você reconhece: é a estrutura exata da função <code>cadastroCliente</code> do <code>formCad.js</code>.</p>
+<h2>try e catch: o plano para quando dá errado</h2>
+<p>Rede falha. API sai do ar. Usuário digita CEP inexistente. Código assíncrono que fala com o mundo externo precisa de tratamento de erro, e com <code>async/await</code> usamos o bloco <code>try/catch</code>:</p>
+<pre>try {
+    // caminho feliz: tente executar isto
+} catch (error) {
+    // plano B: se qualquer linha do try falhar, caia aqui
+}</pre>
+<p>Sem o <code>try/catch</code>, um erro na rede quebraria a função e possivelmente deixaria a tela travada em um estado estranho. Com ele, capturamos o problema e decidimos o que fazer: registrar no console, mostrar mensagem ao usuário, tentar de novo.</p>
+<h2>O assincronismo espalhado pelo projeto</h2>
+<p>Repare que várias funções do projeto são <code>async</code>:</p>
+<pre>async function telaCadastro(app) { ... }
+async function render() {
+    const rotaAtual = mapaDeRotas[hash] || rota404
+    await rotaAtual.pagina(app)
+}</pre>
+<p>O <code>render</code> usa <code>await</code> ao chamar a página porque algumas páginas fazem trabalho assíncrono (a tela de cadastro registra a busca de CEP). Como o roteador não sabe qual página é qual, ele trata todas como potencialmente assíncronas. Mais uma vez o contrato uniforme entre componentes simplificando o sistema.</p>
+<p>Uma observação honesta de sala de aula: páginas como a Home são <code>async</code> sem precisar, por padronização. Não há erro nisso, mas saiba diferenciar: o <code>async</code> só é necessário quando existe <code>await</code> dentro.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>O JavaScript executa uma coisa por vez; tarefas demoradas vão para ajudantes do navegador e voltam por callbacks</li>
+<li>O event loop só processa a fila de callbacks quando o código principal termina, por isso o <code>setTimeout(0)</code> roda por último</li>
+<li>Eventos de usuário já são assincronismo: callbacks para momentos futuros</li>
+<li>Promise é um valor futuro com três estados: pending, fulfilled e rejected</li>
+<li><code>async/await</code> dá leitura natural ao código assíncrono e é o estilo do projeto</li>
+<li><code>try/catch</code> é o plano B obrigatório quando se fala com o mundo externo</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Rode os dois testes do início do capítulo e explique a ordem das mensagens com suas palavras.</li>
+<li>Crie dois <code>setTimeout</code>, um com 2000 e outro com 1000 milissegundos, e preveja a ordem antes de rodar.</li>
+<li>Escreva uma função <code>esperar(ms)</code> que devolve uma Promise que resolve depois de <code>ms</code> milissegundos (pesquise <code>new Promise</code> no MDN). Use com <code>await</code>.</li>
+<li>Modifique a função de CEP para imprimir "buscando..." antes do <code>await</code> e "chegou!" depois, e observe o intervalo no console.</li>
+<li>Force um erro passando uma URL inválida ao <code>fetch</code> e confirme que o <code>catch</code> captura.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, JavaScript Assíncrono: https://developer.mozilla.org/pt-BR/docs/Learn/JavaScript/Asynchronous</li>
+<li>MDN Web Docs, Event loop: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Event_loop</li>
+<li>MDN Web Docs, Promise: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Promise</li>
+<li>MDN Web Docs, async function: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Statements/async_function</li>
+<li>W3Schools, JavaScript Async: https://www.w3schools.com/js/js_async.asp</li>
+<li>W3Schools, JavaScript Promises: https://www.w3schools.com/js/js_promise.asp</li></ul></div>
+<div class="capitulo"><h1 id="cap11">Capítulo 11: Consumindo APIs com fetch</h1>
+<h2>Saindo da ilha</h2>
+<p>Até agora nossa aplicação vivia isolada: todos os dados estavam escritos no próprio código, como o array <code>detalhes</code> dos serviços. Aplicações reais buscam dados do mundo: previsão do tempo, catálogo de produtos, endereço a partir do CEP. A porta de entrada para esse mundo é a API.</p>
+<h2>O que é uma API</h2>
+<p>API significa Application Programming Interface, interface de programação de aplicações. No contexto da web, é um serviço que responde a requisições HTTP devolvendo dados, geralmente no formato JSON, em vez de páginas HTML. Pense na API como um garçom: você faz o pedido (requisição), ele leva à cozinha (servidor) e traz o prato (resposta em JSON).</p>
+<p>A API que usamos no projeto é a ViaCEP, gratuita e sem cadastro, que devolve o endereço de qualquer CEP brasileiro. Experimente abrir no navegador:</p>
+<pre>https://viacep.com.br/ws/01001000/json/</pre>
+<p>A resposta é um texto no formato JSON:</p>
+<pre>{
+  "cep": "01001-000",
+  "logradouro": "Praça da Sé",
+  "bairro": "Sé",
+  "localidade": "São Paulo",
+  "uf": "SP",
+  "estado": "São Paulo"
+}</pre>
+<h2>JSON: o idioma das APIs</h2>
+<p>JSON, JavaScript Object Notation, é um formato de texto para troca de dados que nasceu da sintaxe de objetos do JavaScript. As diferenças para um objeto: as chaves vêm sempre entre aspas duplas e não pode haver funções nem comentários. Como é texto, ele viaja pela rede; do nosso lado, convertemos texto em objeto de verdade para trabalhar:</p>
+<pre>const objeto = JSON.parse(textoJson);       // texto vira objeto
+const texto = JSON.stringify(objeto);       // objeto vira texto</pre>
+<h2>O fetch</h2>
+<p>O <code>fetch</code> é a função do navegador para fazer requisições HTTP. Ele devolve uma Promise, por isso todo o Capítulo 10 foi pré-requisito deste. O padrão completo, direto do nosso <code>formCad.js</code>:</p>
+<pre>async function cadastroCliente(cep){
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const result = await response.json();
+        return result
+    } catch (error) {
+        console.error(error);
+    }
+}</pre>
+<p>Repare que são dois <code>await</code>, e isso confunde no início:</p>
+<ol><li><code>await fetch(...)</code> espera a resposta HTTP chegar. O que chega é um objeto <code>Response</code> com metadados (status, cabeçalhos) e o corpo ainda não lido</li>
+<li><code>await response.json()</code> lê o corpo e converte o texto JSON em objeto JavaScript. Também é assíncrono porque o corpo pode ser grande e chegar em pedaços</li></ol>
+<p>E repare na template string montando a URL: <code>https://viacep.com.br/ws/${cep}/json/</code>. O CEP digitado pelo usuário entra na URL por interpolação. Capítulo 2 trabalhando junto com o Capítulo 10.</p>
+<h2>A tela de cadastro completa</h2>
+<p>Agora temos repertório para ler o componente inteiro:</p>
+<pre>async function capturacep(){
+    const campocep = document.getElementById("cep")
+    campocep.addEventListener("blur", async (event)=&gt;{
+        const dados = await cadastroCliente(event.target.value)
+        document.getElementById("logradouro").value = dados.logradouro
+        document.getElementById("bairro").value = dados.bairro
+        document.getElementById("localidade").value = dados.localidade
+        document.getElementById("estado").value = dados.estado
+    })
+}
+
+async function telaCadastro(app){
+    const formulario = `
+    &lt;form id="cadastroCliente" &gt;
+        &lt;label for="cep"&gt;CEP&lt;/label&gt;
+        &lt;input type="text" id="cep"&gt;
+        &lt;label for="logradouro"&gt;logradouro&lt;/label&gt;
+        &lt;input type="text" id="logradouro"&gt;
+        &lt;label for="bairro"&gt;bairro&lt;/label&gt;
+        &lt;input type="text" id="bairro"&gt;
+        &lt;label for="localidade"&gt;localidade&lt;/label&gt;
+        &lt;input type="text" id="localidade"&gt;
+        &lt;label for="estado"&gt;estado&lt;/label&gt;
+        &lt;input type="text" id="estado"&gt;
+    &lt;/form&gt;
+    `
+    app.innerHTML = formulario;
+    await capturacep()
+}
+
+export default {
+    url: '#cep',
+    label: 'Cadastro',
+    pagina: telaCadastro
+}</pre>
+<p>O fluxo completo, do clique ao endereço preenchido:</p>
+<ol><li>Usuário navega para <code>#cep</code>, o roteador chama <code>telaCadastro(app)</code></li>
+<li>O formulário é desenhado via <code>innerHTML</code> e <code>capturacep</code> registra o ouvinte de <code>blur</code> no campo de CEP (desenhar primeiro, escutar depois, Capítulo 7)</li>
+<li>Usuário digita o CEP e clica fora; o <code>blur</code> dispara</li>
+<li>O ouvinte chama <code>cadastroCliente</code> com o valor digitado e espera a resposta</li>
+<li>Com o objeto em mãos, preenche cada campo do formulário pela propriedade correspondente</li></ol>
+<p>Cada linha desse componente usa um capítulo desta apostila. É o momento do curso em que os fundamentos viram aplicação de verdade.</p>
+<h2>Investigando pelo DevTools</h2>
+<p>Abra a aba Network (Rede) do F12, digite um CEP no formulário e observe a requisição aparecer. Clique nela e explore: a URL chamada, o status (200 significa sucesso, 404 não encontrado), os cabeçalhos e a resposta crua. Essa aba é a ferramenta número um para depurar consumo de API.</p>
+<h2>Tratando o mundo real</h2>
+<p>Nosso código atual confia demais no sucesso. Dois problemas para amadurecer:</p>
+<p>Primeiro: o <code>fetch</code> só rejeita a Promise em erro de rede. Se o servidor responder um erro HTTP (como 400 para CEP mal formatado), a Promise resolve normalmente. O teste correto usa <code>response.ok</code>:</p>
+<pre>const response = await fetch(url);
+if (!response.ok) {
+    throw new Error(`Erro HTTP: ${response.status}`);
+}</pre>
+<p>Segundo: a ViaCEP responde <code>{ "erro": true }</code> para CEP com formato válido mas inexistente. Nesse caso <code>dados.logradouro</code> é <code>undefined</code> e o formulário fica preenchido com "undefined". O tratamento:</p>
+<pre>const dados = await cadastroCliente(event.target.value)
+if (!dados || dados.erro) {
+    alert("CEP não encontrado");
+    return;
+}</pre>
+<p>Melhorar esses dois pontos é um dos exercícios do capítulo.</p>
+<h2>Métodos HTTP: um vislumbre do próximo passo</h2>
+<p>Tudo que fizemos foi leitura, o método GET, que é o padrão do <code>fetch</code>. APIs completas também aceitam escrita, e o <code>fetch</code> recebe um segundo parâmetro de configuração:</p>
+<pre>await fetch("https://api.exemplo.com/livros", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ titulo: "Novo livro", autor: "Autora" })
+});</pre>
+<p>GET busca, POST cria, PUT atualiza, DELETE remove. Esse vocabulário, chamado de padrão REST, é assunto para os refinamentos do fim do curso, quando vamos popular a aplicação de livros com dados de uma API de verdade.</p>
+<h2>Resumo do capítulo</h2>
+<ul><li>API é um serviço que responde requisições HTTP com dados, geralmente em JSON</li>
+<li>JSON é texto no formato de objeto; <code>response.json()</code> o converte em objeto utilizável</li>
+<li>O padrão do projeto: <code>async</code>, <code>try/catch</code>, <code>await fetch</code>, <code>await response.json()</code>, <code>return</code></li>
+<li>São dois awaits porque resposta e corpo chegam em momentos distintos</li>
+<li>A aba Network do DevTools mostra cada requisição em detalhe</li>
+<li>Erros HTTP não caem no catch; teste <code>response.ok</code> e trate respostas de negócio como o <code>erro: true</code> da ViaCEP</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Abra a URL da ViaCEP no navegador com seu próprio CEP e leia o JSON retornado.</li>
+<li>Adicione o teste de <code>response.ok</code> e o tratamento de <code>dados.erro</code> na tela de cadastro.</li>
+<li>Adicione um campo "complemento" ao formulário e preencha com o dado da API.</li>
+<li>Explore outra API pública, como a PokeAPI (https://pokeapi.co), e imprima no console o nome de um Pokémon buscado por id.</li>
+<li>Desafio: crie uma página nova que busca e lista dados de uma API pública usando o padrão acumulador do Capítulo 4 para montar os cards.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs, Usando Fetch: https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch</li>
+<li>MDN Web Docs, Trabalhando com JSON: https://developer.mozilla.org/pt-BR/docs/Learn/JavaScript/Objects/JSON</li>
+<li>MDN Web Docs, Métodos de requisição HTTP: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Methods</li>
+<li>W3Schools, JavaScript Fetch API: https://www.w3schools.com/js/js_api_fetch.asp</li>
+<li>W3Schools, JSON Introduction: https://www.w3schools.com/js/js_json_intro.asp</li>
+<li>Documentação da ViaCEP: https://viacep.com.br/</li></ul></div>
+<div class="capitulo"><h1 id="cap12">Capítulo 12: Programando com IA, engenharia de prompt para desenvolvedores</h1>
+<h2>Uma conversa franca antes de começar</h2>
+<p>Chegamos à penúltima aula com uma pergunta que paira sobre todo estudante de programação hoje: se a inteligência artificial escreve código, por que passei meses aprendendo variáveis, laços, funções, DOM, assincronismo e fetch?</p>
+<p>A resposta é o tema deste capítulo: a IA escreve código, mas quem projeta, avalia, corrige e responde pelo resultado é você. Um LLM nas mãos de quem não domina os fundamentos produz código que a pessoa não sabe ler, não sabe testar e não sabe consertar quando quebra. Nas mãos de quem fez este curso, produz velocidade: você vira o arquiteto e o revisor, e a IA vira um programador funcionário da sua equipe, rápido e incansável, mas que precisa de ordens claras e de supervisão.</p>
+<p>Repare no que aconteceu nos capítulos anteriores: você sabe por que o <code>preventDefault</code> é obrigatório no submit, por que o listener vem depois do <code>innerHTML</code>, por que o fetch precisa de dois awaits, por que o mapa de rotas vence o switch. É exatamente esse conhecimento que transforma um prompt vago em uma especificação precisa, e uma resposta da IA em código auditado. A estrutura é sua; a digitação é dela.</p>
+<h2>O que é um LLM</h2>
+<p>LLM significa Large Language Model, grande modelo de linguagem. São sistemas treinados sobre volumes gigantescos de texto e código (incluindo a documentação do MDN e milhões de repositórios) que aprendem a prever a continuação mais provável de um texto. Quando você escreve um pedido, o modelo gera a resposta token a token com base nesses padrões. Exemplos: ChatGPT, Claude, Gemini e Copilot.</p>
+<p>Duas consequências práticas desse funcionamento:</p>
+<ol><li>O modelo não executa o código que escreve. Ele prevê texto plausível. Código plausível e código correto são coisas diferentes, e a diferença aparece quando você testa</li>
+<li>O modelo pode alucinar: afirmar com confiança algo falso, como um método que não existe ou um parâmetro inventado. A defesa é a sua: testar no navegador e conferir no MDN</li></ol>
+<p>Por isso a regra de ouro do capítulo: a IA propõe, você dispõe. Nenhuma linha entra no projeto sem você entender o que ela faz.</p>
+<h2>Anatomia de um bom prompt</h2>
+<p>Prompt é a instrução que você dá ao modelo. A diferença entre uma resposta genérica e uma resposta sob medida está quase toda na qualidade do prompt. Um bom prompt de programação tem estas partes:</p>
+<ol><li>Papel (persona): quem a IA deve ser. Define o tom, o nível e as prioridades da resposta</li>
+<li>Contexto: o projeto, as tecnologias, as restrições e os padrões existentes</li>
+<li>Tarefa: o que exatamente deve ser feito, com critérios de aceitação</li>
+<li>Formato da saída: como você quer receber (arquivo completo, apenas o trecho, com ou sem explicação)</li>
+<li>Restrições: o que não pode ser feito</li></ol>
+<p>Compare um prompt fraco com um forte, para a mesma necessidade real do nosso projeto:</p>
+<p>Prompt fraco:</p>
+<pre>faz uma pagina de livros em javascript</pre>
+<p>O resultado será qualquer coisa: talvez React, talvez jQuery, talvez um HTML solto que não conversa com nossa arquitetura.</p>
+<p>Prompt forte:</p>
+<pre>Você é um desenvolvedor front-end da minha equipe, especialista em JavaScript
+puro (Vanilla JS), sem frameworks.
+
+Contexto do projeto: uma SPA com roteamento por hash. Cada página é um
+componente auto montável em um arquivo próprio, seguindo este contrato:
+uma função async que recebe o elemento "app" e se desenha nele via
+innerHTML, registrando os próprios eventos depois de desenhar; e um
+export default de um objeto { url, label, pagina }. Exemplo real do projeto:
+
+async function telaCadastro(app){
+    const formulario = `...html...`
+    app.innerHTML = formulario;
+    await capturacep()
+}
+export default {
+    url: '#cep',
+    label: 'Cadastro',
+    pagina: telaCadastro
+}
+
+O CSS usa metodologia BEM com classes como bem-card, bem-card__title e
+bem-grid-auto.
+
+Tarefa: crie o componente de uma página "Livros" que busca dados da API
+https://openlibrary.org/search.json?q=javascript com fetch e async/await,
+trata erros com try/catch e testa response.ok, e renderiza os 10 primeiros
+resultados como cards (título e autor) usando as classes BEM citadas.
+
+Formato: entregue apenas o arquivo livros.js completo, com comentários
+curtos explicando os pontos principais.
+
+Restrições: não use frameworks nem bibliotecas externas, não altere
+nenhum outro arquivo, e não use var.</pre>
+<p>Percebeu o que aconteceu? Todo o conhecimento do curso virou especificação: o contrato dos componentes (Capítulo 8), o padrão de fetch com tratamento de erro (Capítulos 10 e 11), o BEM (Capítulo 8), a proibição do var (Capítulo 2). A IA que receber esse prompt vai produzir código que encaixa no projeto na primeira tentativa. Quem não fez o curso não tem como escrever esse prompt.</p>
+<h2>Prompts de sistema: criando seu programador funcionário</h2>
+<p>Ferramentas de IA permitem definir uma instrução permanente (system prompt, instruções personalizadas ou arquivos de contexto do projeto, como um CLAUDE.md). É ali que você cria de vez a personalidade e as regras do seu assistente, sem repetir tudo a cada pergunta. Um modelo pronto para o nosso projeto, que você pode adaptar:</p>
+<pre># Papel
+Você é um desenvolvedor front-end júnior da minha equipe. Eu sou o
+desenvolvedor responsável pelo projeto e reviso todo o seu código.
+
+# Projeto
+SPA de uma livraria em JavaScript puro (ES2015+), sem frameworks.
+Roteamento por hash: um array de rotas vira um mapa (objeto) indexado
+pela url; o evento hashchange dispara a função render, que executa a
+função "pagina" da rota atual passando o elemento #app. Rotas
+desconhecidas caem em uma rota 404.
+
+# Padrões obrigatórios
+- Cada página é um componente auto montável: função async que recebe o
+  app, desenha via innerHTML e depois registra os próprios listeners
+- Export default de objeto { url, label, pagina }
+- const por padrão, let quando necessário, var proibido
+- Template strings para todo HTML gerado
+- Eventos com addEventListener, nunca atributos onclick no HTML
+- Fetch sempre com async/await, try/catch e teste de response.ok
+- Conteúdo digitado por usuário entra no DOM via textContent, nunca innerHTML
+- CSS com metodologia BEM
+
+# Como responder
+- Antes de codificar, liste em uma frase o que entendeu da tarefa
+- Entregue arquivos completos, indicando o caminho de cada um
+- Explique decisões não óbvias em no máximo três linhas
+- Se a tarefa estiver ambígua, faça perguntas antes de codificar
+- Se algo que pedi violar os padrões acima, avise antes de fazer
+
+# Limites
+- Não altere arquivos que não fazem parte da tarefa
+- Não adicione bibliotecas nem frameworks
+- Não invente APIs: se não tiver certeza de um método, diga que é
+  preciso confirmar no MDN</pre>
+<p>Esse texto é um documento de arquitetura disfarçado de prompt. Escrevê-lo exige dominar o projeto; mantê-lo atualizado é parte do trabalho de quem lidera.</p>
+<h2>Técnicas que elevam a qualidade das respostas</h2>
+<p>Além da estrutura, algumas técnicas comprovadas:</p>
+<p>Dê exemplos (few-shot). Mostrar um componente pronto, como fizemos no prompt forte, vale mais que três parágrafos de descrição. O modelo imita padrões com muita eficiência.</p>
+<p>Peça o raciocínio antes do código. Instruções como "explique sua abordagem em três passos antes de codificar" reduzem erros de lógica, porque forçam o modelo a planejar.</p>
+<p>Divida tarefas grandes. Não peça "faça o sistema de livros completo". Peça o componente da lista, depois a busca, depois a página de detalhe. Igual dividimos o curso em aulas, divida o trabalho em prompts.</p>
+<p>Itere sobre a resposta. A primeira resposta é um rascunho. Continue a conversa: "o listener está sendo registrado antes do innerHTML, corrija", "extraia a montagem do card para uma função separada". Saber apontar o erro exato é o seu diferencial.</p>
+<p>Use a IA para aprender, não só para produzir. Alguns dos melhores prompts de estudante:</p>
+<pre>Explique linha por linha o que este código faz, como se eu fosse um
+aluno que acabou de aprender eventos: [cole o código]</pre>
+<pre>Este código quebra com o erro [cole o erro do console]. Explique a causa
+provável antes de propor a correção.</pre>
+<pre>Revise este meu componente apontando problemas de segurança, de
+legibilidade e violações do contrato do projeto: [cole o código]</pre>
+<pre>Me faça cinco perguntas de prova sobre assincronismo em JavaScript e
+corrija minhas respostas uma a uma.</pre>
+<h2>O fluxo de trabalho profissional com IA</h2>
+<p>Na prática de mercado, o ciclo com um assistente de IA é este, e repare quem faz cada parte:</p>
+<ol><li>Você especifica: papel, contexto, tarefa, formato, restrições</li>
+<li>A IA produz um rascunho</li>
+<li>Você lê e entende cada linha. O que não entender, pergunta antes de usar</li>
+<li>Você testa no navegador, com o console e a aba Network abertos</li>
+<li>Você refina em novas rodadas de conversa</li>
+<li>Você faz o commit, porque a responsabilidade pelo código é de quem assina</li></ol>
+<p>A IA participa apenas do passo 2. Todos os outros dependem dos fundamentos que você construiu nesta apostila. É por isso que os melhores usuários de IA são justamente os que menos precisariam dela: conhecimento técnico não foi substituído, foi promovido a cargo de chefia.</p>
+<h2>Cuidados éticos e de segurança</h2>
+<ul><li>Nunca cole em ferramentas de IA senhas, chaves de API, tokens ou dados pessoais de clientes</li>
+<li>Código gerado pode reproduzir padrões inseguros; a revisão de segurança (como o cuidado com innerHTML e XSS do Capítulo 7) continua sendo sua</li>
+<li>Em processos seletivos, provas e trabalhos, respeite as regras sobre uso de IA; e lembre que entrevistas técnicas testam você sem assistente</li>
+<li>Cite e confira as fontes: quando a IA afirmar algo sobre a linguagem, valide no MDN</li></ul>
+<h2>Resumo do capítulo</h2>
+<ul><li>LLMs preveem texto plausível; correção é responsabilidade de quem revisa e testa</li>
+<li>Um bom prompt tem papel, contexto, tarefa, formato e restrições</li>
+<li>O prompt de sistema transforma a IA em um programador funcionário com a personalidade e os padrões que você definir</li>
+<li>Exemplos, raciocínio antes do código, divisão de tarefas e iteração elevam a qualidade</li>
+<li>O fluxo profissional: você especifica, a IA rascunha, você entende, testa, refina e assina</li>
+<li>Os fundamentos do curso são o que permitem escrever boas especificações e auditar os resultados</li></ul>
+<h2>Para praticar</h2>
+<ol><li>Escreva um prompt fraco e um forte para criar a página "Autores" do projeto, e compare as respostas de uma IA para os dois.</li>
+<li>Adapte o prompt de sistema deste capítulo para o seu projeto pessoal e salve como documento do projeto.</li>
+<li>Peça a uma IA que gere um componente novo e depois encontre você mesmo, sem ajuda, três pontos a melhorar na resposta.</li>
+<li>Cole um trecho da apostila que ainda gere dúvida e peça uma explicação com analogias diferentes.</li>
+<li>Desafio final: usando seu prompt de sistema, conduza uma IA na criação de uma funcionalidade completa para o App Livros em pelo menos três rodadas de refinamento, e apresente na aula o histórico da conversa comentando suas intervenções.</li></ol>
+<h2>Referências</h2>
+<ul><li>MDN Web Docs (fonte para validar qualquer afirmação técnica): https://developer.mozilla.org/pt-BR/</li>
+<li>Anthropic, guia de engenharia de prompt: https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview</li>
+<li>OpenAI, boas práticas de prompt: https://platform.openai.com/docs/guides/prompt-engineering</li>
+<li>Google, introdução aos LLMs: https://developers.google.com/machine-learning/resources/intro-llms</li>
+<li>W3Schools, seção de IA generativa: https://www.w3schools.com/gen_ai/</li></ul></div>
+<div class="capitulo"><h1 id="cap13">Capítulo 13: Fechando o ciclo, o projeto completo e os próximos passos</h1>
+<h2>Olhando para trás</h2>
+<p>Na primeira aula, nossa aplicação era um <code>console.log</code> no navegador. Hoje ela é uma SPA com menu dinâmico, cinco páginas componentizadas, roteamento por hash com página 404 e um formulário que consulta uma API pública em tempo real. Nenhum framework, nenhuma mágica: cada linha passou pela sua mão e está explicada nesta apostila.</p>
+<p>Vale reconstituir o mapa do que foi aprendido, porque ele é também o mapa de leitura para revisão:</p>
+<table><tr><th>Fundamento</th><th>Onde vive no projeto</th><th>Capítulo</th></tr><tr><td>Variáveis, const e let, template strings</td><td>Todo o projeto, em especial as páginas</td><td>2</td></tr><tr><td>Condicionais, operador \</td><td>\</td><td>como padrão</td><td>Hash inicial e rota 404 no main.js</td><td>3</td></tr><tr><td>Laços for e for...of</td><td>Cards de serviços e mapa de rotas</td><td>4</td></tr><tr><td>Arrays e objetos, .map()</td><td>rotas.js, detalhes de serviços, navbar</td><td>5</td></tr><tr><td>Funções, callbacks, arrow functions</td><td>Contrato das páginas, rota 404, listeners</td><td>6</td></tr><tr><td>DOM e eventos (submit, blur, hashchange)</td><td>Contato, cadastro e roteador</td><td>7</td></tr><tr><td>ES Modules e componentes auto montáveis</td><td>Estrutura inteira do src/js</td><td>8</td></tr><tr><td>Roteamento hash em SPA</td><td>main.js linha por linha</td><td>9</td></tr><tr><td>Event loop, Promises, async/await</td><td>Testes comentados e render assíncrono</td><td>10</td></tr><tr><td>Fetch, JSON e tratamento de erros</td><td>Cadastro com ViaCEP</td><td>11</td></tr><tr><td>Engenharia de prompt e trabalho com IA</td><td>Seu próximo projeto</td><td>12</td></tr></table>
+<h2>A prova de que você aprendeu</h2>
+<p>O teste definitivo não é recitar definições, é conseguir responder perguntas de arquitetura como estas, que foram as perguntas centrais do curso:</p>
+<ol><li>Por que a aplicação inteira funciona com um único arquivo HTML?</li>
+<li>O que acontece, passo a passo, entre o clique em "Sobre" no menu e a página aparecer na tela?</li>
+<li>Por que adicionar uma página nova não exige alterar o roteador nem a navbar?</li>
+<li>Por que o <code>addEventListener</code> precisa vir depois do <code>innerHTML</code>?</li>
+<li>Por que o <code>fetch</code> precisa de <code>await</code> duas vezes e de um <code>try/catch</code>?</li></ol>
+<p>Se alguma resposta hesitar, o capítulo correspondente está aí para revisita. A apostila foi escrita para ser relida com o projeto aberto do lado.</p>
+<h2>Próximos passos do projeto</h2>
+<p>O roadmap do curso ainda reserva refinamentos, e eles são os desafios de conclusão:</p>
+<ol><li>Renderização dinâmica de dados de API: substituir o array <code>detalhes</code> da página de Serviços por dados reais vindos de uma API de livros, como a Open Library, aplicando o padrão completo do Capítulo 11</li>
+<li>Persistência local: guardar os contatos capturados no <code>localStorage</code>, para a lista sobreviver ao fechamento do navegador</li>
+<li>Validações de formulário: CEP com formato correto, email válido, campos obrigatórios</li>
+<li>Estados de carregamento: mostrar um "carregando..." enquanto o fetch não responde</li>
+<li>Acessibilidade e refinamento de CSS sobre a base BEM já construída</li></ol>
+<p>E o desafio maior, que usa o Capítulo 12: escolher uma funcionalidade dessa lista e construí-la conduzindo uma IA como seu programador funcionário, com você no papel de arquiteto e revisor.</p>
+<h2>Depois do curso</h2>
+<p>O caminho natural a partir daqui:</p>
+<ul><li>Aprofundar JavaScript: classes, closures, destructuring, spread, generators</li>
+<li>Aprender um framework (React ou Vue) reconhecendo neles tudo que você já fez na mão: componentes, rotas, renderização orientada a dados</li>
+<li>Conhecer testes automatizados, que são o próximo nível da confiança no próprio código</li>
+<li>Praticar Git além do básico: branches, pull requests, revisão de código</li></ul>
+<h2>Bibliografia e referências gerais</h2>
+<h3>Documentação de consulta permanente</h3>
+<ul><li>MDN Web Docs, a referência definitiva de JavaScript, HTML e CSS, mantida pela Mozilla: https://developer.mozilla.org/pt-BR/</li>
+<li>W3Schools, tutoriais diretos com editor de testes online, bom para consulta rápida: https://www.w3schools.com/js/</li>
+<li>Especificação viva do JavaScript (ECMAScript), para os curiosos: https://tc39.es/ecma262/</li></ul>
+<h3>Livros da Casa do Código</h3>
+<ul><li>SILVEIRA, Paulo; ALMEIDA, Adriano. Lógica de Programação: crie seus primeiros programas usando Javascript e HTML. Casa do Código. Ideal para revisar os fundamentos dos primeiros capítulos com outra abordagem</li>
+<li>ALMEIDA, Flávio. Cangaceiro JavaScript: uma aventura no sertão da programação. Casa do Código. Aprofunda JavaScript avançado, padrões de projeto e SPA sem framework, exatamente o espírito do nosso curso</li>
+<li>TEIXEIRA, Stefan. JavaScript Assertivo: testes e qualidade de código em JS de ponta a ponta. Casa do Código. O próximo passo natural: garantir com testes que o código continua funcionando</li></ul>
+<p>Catálogo completo da editora: https://www.casadocodigo.com.br/</p>
+<h3>Outros livros recomendados</h3>
+<ul><li>HAVERBEKE, Marijn. Eloquent JavaScript. Disponível gratuitamente em https://eloquentjavascript.net/ (em inglês, com tradução parcial em português)</li>
+<li>SIMPSON, Kyle. Série You Don't Know JS Yet. Disponível gratuitamente em https://github.com/getify/You-Dont-Know-JS (em inglês), referência profunda sobre escopo, closures e assincronismo</li></ul>
+<h3>Ferramentas usadas no curso</h3>
+<ul><li>Visual Studio Code: https://code.visualstudio.com/</li>
+<li>Extensão Live Server para servir a SPA localmente</li>
+<li>Git e GitHub para versionamento, com o histórico do projeto servindo de linha do tempo das aulas</li>
+<li>DevTools do navegador (F12): Console para depuração e Network para inspecionar as requisições</li></ul>
+<h2>Palavra final</h2>
+<p>Este projeto foi construído para ser modelo: a estrutura de pastas, o contrato dos componentes, o roteador e os padrões de código estão prontos para você copiar, adaptar e expandir na sua própria aplicação. O código está no repositório, a explicação está nesta apostila e o método de trabalho com IA está no Capítulo 12.</p>
+<p>A partir de agora, o professor vira consultor e o aluno vira autor. Bom código.</p></div>
+</body>
+</html>
