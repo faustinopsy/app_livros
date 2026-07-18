@@ -1,27 +1,16 @@
-function navbar(item_menu){
-const navbar = document.getElementById('navbar');
-navbar.innerHTML = `<nav class="bem-navbar">
-            <a href="#" class="bem-navbar__brand">Brand</a>
-            <input type="checkbox" id="nav-toggle" class="bem-navbar__checkbox">
-            <label for="nav-toggle" class="bem-navbar__toggle">☰</label>
-            <ul class="bem-navbar__menu">
-                ${
-                    item_menu.map((item)=>{
-                        return `<li class="bem-navbar__item">
-                            <a href="${item.url}" class="bem-navbar__link">${item.label}</a>
-                        </li>`
-                    })
+function navbar(itens) {
+    const nav = document.getElementById('navbar');
+    const links = itens.map(item => `
+        <li class="bem-navbar__item">
+            <a href="${item.url}" class="bem-navbar__link">${item.label}</a>
+        </li>`).join('');
 
-                }
-            </ul>
-        </nav>`.replaceAll(',','');
+    nav.innerHTML = `<nav class="bem-navbar">
+        <a href="#" class="bem-navbar__brand">Brand</a>
+        <input type="checkbox" id="nav-toggle" class="bem-navbar__checkbox">
+        <label for="nav-toggle" class="bem-navbar__toggle">☰</label>
+        <ul class="bem-navbar__menu">${links}</ul>
+    </nav>`;
 }
-/*
-item_menu
-for(let i=0; i<item_menu.length; i++){
-    `<li class="bem-navbar__item">
-        <a href="${item_menu[i].url}" class="bem-navbar__link >${item_menu[i].label}</a>
-    </li>`
-}
-*/
+
 export default navbar;
