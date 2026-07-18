@@ -6,6 +6,12 @@ A ideia não é entregar um produto final pronto, e sim registrar a **evolução
 
 ---
 
+##  Apostila do curso
+
+O material didático completo, capítulo a capítulo, está na pasta [apostila/](apostila/README.md). Cada capítulo explica um fundamento da linguagem usando o código real deste projeto, com exercícios e referências (MDN, W3Schools e livros da Casa do Código).
+
+---
+
 ##  Objetivo do curso
 
 Aprofundar JavaScript além do básico, praticando os tópicos avançados que sustentam aplicações web modernas:
@@ -49,14 +55,12 @@ app_livros/
 │   ├── img/                        # imagens
 │   └── js/
 │       ├── main.js                 # ponto de entrada: roteador + render
-│       ├── app.js                  # exercícios de fundamentos (if/else, operadores)
 │       └── components/
 │           ├── navbar/             # menu dinâmico
 │           ├── footer/
 │           ├── rotas/              # definição das rotas
 │           └── paginas/            # home, sobre, serviços, contato
-├── testeArray.js                   # exercícios de arrays
-└── testeObjetos.js                 # exercícios de objetos
+
 ```
 
 Os arquivos `app.js`, `testeArray.js` e `testeObjetos.js` são **exercícios das primeiras aulas** (fundamentos: operadores, condicionais, arrays e objetos), mantidos como registro histórico do roteiro.
@@ -92,7 +96,7 @@ Depois acesse `http://localhost:8000` (ou a porta indicada).
 - [x] Menu dinâmico a partir de objetos
 - [x] Padronização das páginas
 - [x] Centralização do roteamento (SPA)
-- [ ] Consumo de API com `fetch` e `async/await`
+- [X] Consumo de API com `fetch` e `async/await`
 - [ ] Renderização dinâmica de dados vindos da API
 - [ ] Refinamentos e tópicos avançados
 
