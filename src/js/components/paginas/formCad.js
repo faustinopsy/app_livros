@@ -1,16 +1,8 @@
-async function cadastroCliente(cep){
-    try {
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const result = await response.json();
-        return result
-    } catch (error) {
-        console.error(error);
-    };
-}
+import buscarServicos from "../services/api.js"
 async function capturacep(){
     const campocep = document.getElementById("cep")
     campocep.addEventListener("blur",async (event)=>{
-        const dados = await cadastroCliente(event.target.value)
+        const dados = await buscarServicos("https://viacep.com.br/ws/", event.target.value,"/json/")
         document.getElementById("logradouro").value = dados.logradouro
         document.getElementById("bairro").value = dados.bairro
         document.getElementById("localidade").value = dados.localidade
