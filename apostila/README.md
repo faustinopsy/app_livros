@@ -15,8 +15,9 @@ Material didático do curso construído aula a aula, aos sábados. Cada capítul
 9. [SPA e roteamento por hash](capitulo-09-spa-roteamento.md)
 10. [Assincronismo, o tempo no JavaScript](capitulo-10-assincronismo.md)
 11. [Consumindo APIs com fetch](capitulo-11-fetch-api.md)
-12. [Programando com IA, engenharia de prompt para desenvolvedores](capitulo-12-llm-prompts.md)
-13. [Fechando o ciclo, o projeto completo e os próximos passos](capitulo-13-conclusao-referencias.md)
+12. [Estratégias de cache e os armazenamentos do navegador](capitulo-12-cache-armazenamento.md)
+13. [Programando com IA, engenharia de prompt para desenvolvedores](capitulo-13-llm-prompts.md)
+14. [Fechando o ciclo, o projeto completo e os próximos passos](capitulo-14-conclusao-referencias.md)
 
 ## Como este material se organiza
 
@@ -28,4 +29,4 @@ Cada capítulo segue a mesma estrutura, pensada para revisão:
 - Exercícios para praticar
 - Referências para aprofundamento (MDN, W3Schools e livros)
 
-A ordem dos capítulos é a ordem em que o projeto foi construído nos commits do repositório: primeiro os fundamentos, depois as peças da SPA, e por fim o consumo de API e o trabalho com IA. O Capítulo 12 prepara o aluno para construir sozinho, usando LLMs como apoio, e o Capítulo 13 fecha com os desafios finais e a bibliografia completa.
+A ordem dos capítulos é a ordem em que o projeto foi construído nos commits do repositório: primeiro os fundamentos, depois as peças da SPA, o consumo de API, o cache com a camada de serviços e o trabalho com IA. O Capítulo 12 apresenta as estratégias de cache e os armazenamentos do navegador, o Capítulo 13 prepara o aluno para construir sozinho usando LLMs como apoio, e o Capítulo 14 fecha com os desafios finais e a bibliografia completa.

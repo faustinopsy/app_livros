@@ -3,6 +3,7 @@ import servicos from '../paginas/servicos.js'
 import sobre from '../paginas/sobre.js'
 import contato from '../paginas/contato.js'
 import telaCadastro from '../paginas/formCad.js'
+import personagens from '../paginas/personagens.js'
 
 const roteador = [
     home,
@@ -10,6 +11,7 @@ const roteador = [
     sobre,
     servicos,
     contato,
+    personagens
     
 ]
 

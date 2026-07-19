@@ -1,4 +1,4 @@
-# Capítulo 12: Programando com IA, engenharia de prompt para desenvolvedores
+# Capítulo 13: Programando com IA, engenharia de prompt para desenvolvedores
 
 ## Uma conversa franca antes de começar
 

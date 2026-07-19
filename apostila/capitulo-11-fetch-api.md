@@ -154,6 +154,8 @@ await fetch("https://api.exemplo.com/livros", {
 
 GET busca, POST cria, PUT atualiza, DELETE remove. Esse vocabulário, chamado de padrão REST, é assunto para os refinamentos do fim do curso, quando vamos popular a aplicação de livros com dados de uma API de verdade.
 
+Uma nota de evolução do código: depois desta aula, a função de busca deixou de morar dentro do componente e foi centralizada em uma camada de serviços (`services/api.js`), servindo tanto o CEP quanto a nova página de personagens da API Rick and Morty. Essa refatoração e o cache que nasceu sobre ela são o assunto do próximo capítulo.
+
 ## Resumo do capítulo
 
 - API é um serviço que responde requisições HTTP com dados, geralmente em JSON

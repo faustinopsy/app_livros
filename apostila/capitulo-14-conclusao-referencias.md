@@ -1,4 +1,4 @@
-# Capítulo 13: Fechando o ciclo, o projeto completo e os próximos passos
+# Capítulo 14: Fechando o ciclo, o projeto completo e os próximos passos
 
 ## Olhando para trás
 
@@ -17,8 +17,9 @@ Vale reconstituir o mapa do que foi aprendido, porque ele é também o mapa de l
 | ES Modules e componentes auto montáveis | Estrutura inteira do src/js | 8 |
 | Roteamento hash em SPA | main.js linha por linha | 9 |
 | Event loop, Promises, async/await | Testes comentados e render assíncrono | 10 |
-| Fetch, JSON e tratamento de erros | Cadastro com ViaCEP | 11 |
-| Engenharia de prompt e trabalho com IA | Seu próximo projeto | 12 |
+| Fetch, JSON e tratamento de erros | Cadastro com ViaCEP e personagens | 11 |
+| Cache, armazenamentos e padrões Strategy e Decorator | services/api.js, apiCache.js e storageStrategy.js | 12 |
+| Engenharia de prompt e trabalho com IA | Seu próximo projeto | 13 |
 
 ## A prova de que você aprendeu
 
@@ -42,7 +43,7 @@ O roadmap do curso ainda reserva refinamentos, e eles são os desafios de conclu
 4. Estados de carregamento: mostrar um "carregando..." enquanto o fetch não responde
 5. Acessibilidade e refinamento de CSS sobre a base BEM já construída
 
-E o desafio maior, que usa o Capítulo 12: escolher uma funcionalidade dessa lista e construí-la conduzindo uma IA como seu programador funcionário, com você no papel de arquiteto e revisor.
+E o desafio maior, que usa o Capítulo 13: escolher uma funcionalidade dessa lista e construí-la conduzindo uma IA como seu programador funcionário, com você no papel de arquiteto e revisor.
 
 ## Depois do curso
 
@@ -83,6 +84,6 @@ Catálogo completo da editora: https://www.casadocodigo.com.br/
 
 ## Palavra final
 
-Este projeto foi construído para ser modelo: a estrutura de pastas, o contrato dos componentes, o roteador e os padrões de código estão prontos para você copiar, adaptar e expandir na sua própria aplicação. O código está no repositório, a explicação está nesta apostila e o método de trabalho com IA está no Capítulo 12.
+Este projeto foi construído para ser modelo: a estrutura de pastas, o contrato dos componentes, o roteador e os padrões de código estão prontos para você copiar, adaptar e expandir na sua própria aplicação. O código está no repositório, a explicação está nesta apostila e o método de trabalho com IA está no Capítulo 13.
 
 A partir de agora, o professor vira consultor e o aluno vira autor. Bom código.
