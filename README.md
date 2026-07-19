@@ -57,7 +57,7 @@ de cada linha. Cada capítulo adiciona uma peça nova ao quebra-cabeça.
 
 ### Parte VI — Além do consumo de API
 - **Capítulo 18** — Boas práticas, organização e próximos passos
-- **Capítulo 19** — Guardando dados no navegador: Web Storage e cache
+- **Capítulo 19** — Guardando dados no navegador: armazenamentos, cache e estratégias
 - **Capítulo 20** — Service Workers e PWA: o app que funciona offline
 
 ### Parte VII — Apêndices

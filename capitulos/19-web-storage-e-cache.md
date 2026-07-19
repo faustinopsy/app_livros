@@ -1,27 +1,29 @@
-# Capítulo 19 — Guardando dados no navegador: Web Storage e cache
+# Capítulo 19 — Guardando dados no navegador: armazenamentos, cache e estratégias
 
 No Capítulo 18 fizemos um panorama dos próximos passos. Agora vamos **colocar a
 mão na massa** no primeiro deles — e talvez o de melhor custo-benefício de todo o
 projeto. Nosso App Livros sofre de uma "amnésia": toda vez que você entra na tela
-de livros, ele vai **de novo** à internet buscar exatamente os mesmos dados. Feche
-a aba, reabra, e todo o trabalho é refeito do zero.
+de livros ou de personagens, ele vai **de novo** à internet buscar exatamente os
+mesmos dados. Feche a aba, reabra, e todo o trabalho é refeito do zero.
 
-Neste capítulo vamos curar essa amnésia com o **Web Storage** (`localStorage` e
-`sessionStorage`) e construir um **cache** de verdade, economizando rede e
-deixando a aplicação instantânea.
+Neste capítulo vamos curar essa amnésia conhecendo **todos os armazenamentos do
+navegador**, construindo um **cache de verdade** sobre a camada de serviços — com
+dois padrões de projeto clássicos, o **Decorator/Proxy** e o **Strategy** — e
+aprendendo o vocabulário de **estratégias de cache** que o mercado usa todos os
+dias.
 
 > 💡 **Nos bastidores — onde este capítulo se encaixa**
 > Esta é a sequência natural depois do consumo de API (Caps. 15 a 17). A ordem
 > completa da nossa jornada de dados é: **buscar da API → guardar/cachear
 > localmente (este capítulo) → funcionar offline com Service Workers (próximo
-> passo)**. Cada peça se apoia na anterior.
+> capítulo)**. Cada peça se apoia na anterior.
 
 ---
 
 ## 19.1 O problema, medido com os próprios olhos
 
 Antes de resolver, vamos **enxergar** o desperdício. Abra o App Livros, entre na
-tela de Livros e abra as DevTools (`F12`) na aba **Network** (Rede). Navegue
+tela de personagens e abra as DevTools (`F12`) na aba **Network** (Rede). Navegue
 para a página 2, volte para a 1, vá para a 3, volte para a 1 de novo.
 
 Cada ida e volta dispara uma **nova requisição** — inclusive para páginas que
@@ -36,50 +38,114 @@ sempre com o mesmo conteúdo. Isso é desperdício em três frentes:
 
 A pergunta que guia este capítulo é: *por que buscar de novo algo que já temos?*
 
+### Cache está em todo lugar (você usa o dia inteiro)
+
+A resposta a essa pergunta tem nome — **cache**: uma **cópia local** de um dado
+que custa caro buscar na origem. Antes do código, repare como a indústria inteira
+funciona sobre camadas de cache:
+
+- O **navegador** guarda imagens, CSS e scripts dos sites que você visita — por
+  isso a segunda visita é sempre mais rápida que a primeira.
+- O **Instagram** e o **X** mostram o feed antigo na hora quando você abre o app
+  sem internet, e atualizam quando a conexão volta. Aquele feed é um cache.
+- O **Spotify** guarda as músicas baixadas para tocar sem rede.
+- A **Netflix** instala servidores de cache dentro dos provedores de internet (as
+  famosas **CDNs**) para o filme sair de perto de você, e não do outro lado do
+  planeta.
+- O seu **processador** tem memórias de cache (L1, L2, L3), porque ir até a RAM é
+  lento demais para ele.
+- O **DNS**, que traduz `google.com` em endereço IP, é cacheado pelo sistema
+  operacional para não perguntar de novo a cada clique.
+
+Estudos famosos da Amazon e do Google associam **cada 100 ms a mais de espera** a
+quedas mensuráveis de vendas e engajamento. Velocidade é funcionalidade — e cache
+é a forma mais barata de comprá-la.
+
+> "Existem apenas duas coisas difíceis na computação: invalidação de cache e dar
+> nomes às coisas." — Phil Karlton
+
+Vamos encontrar as duas neste capítulo.
+
 ---
 
-## 19.2 O Web Storage: a memória do navegador
+## 19.2 O tour completo: os cinco armazenamentos do navegador
 
-O navegador oferece dois "cofrinhos" onde cada site pode guardar informações no
-formato **chave → valor** — a mesma ideia de propriedade e valor dos objetos
-(Cap. 2), só que persistida pelo navegador. A API é idêntica para os dois:
+Para ter cache no front-end, precisamos de um lugar para guardar as cópias. O
+navegador oferece **cinco opções**, cada uma com sua vocação. Conhecer as cinco é
+o que permite escolher bem.
+
+### Cookies — o veterano
+
+Guardam textos minúsculos (~4 KB) e têm uma característica única: são **enviados
+automaticamente ao servidor** em toda requisição àquele domínio. Por isso servem
+para **identificação de sessão** (o servidor reconhece que você é você) — e por
+isso mesmo **não** servem para cache: inflariam cada requisição com dados que o
+servidor não pediu.
 
 ```js
-// guardar um valor sob uma chave
-localStorage.setItem("tema", "noite");
-
-// ler pelo nome da chave
-const tema = localStorage.getItem("tema"); // "noite"
-
-// remover uma chave específica
-localStorage.removeItem("tema");
-
-// apagar absolutamente tudo
-localStorage.clear();
+document.cookie = "tema=noite; max-age=31536000";
 ```
 
-Quatro métodos e você domina o essencial: `setItem`, `getItem`, `removeItem`,
-`clear`.
+### `localStorage` — o armário permanente
 
-### `localStorage` × `sessionStorage`: a diferença é o tempo de vida
+Chave → valor, ~5 a 10 MB por site, **persiste para sempre** (mesmo fechando o
+navegador), até alguém apagar. Quatro métodos e você domina o essencial:
 
-Os dois têm exatamente os mesmos métodos. O que muda é **quanto tempo os dados
-sobrevivem**:
+```js
+localStorage.setItem("tema", "noite");  // guardar
+localStorage.getItem("tema");           // ler (null se não existir)
+localStorage.removeItem("tema");        // remover uma chave
+localStorage.clear();                   // apagar tudo do site
+```
 
-| Recurso              | Vive enquanto...                                   | Ideal para                                   |
-|----------------------|----------------------------------------------------|----------------------------------------------|
-| **`localStorage`**   | ...você não apagar — **persiste para sempre**, mesmo fechando o navegador | tema escolhido, dados em **cache**, "lembrar de mim" |
-| **`sessionStorage`** | ...a **aba** estiver aberta — some ao fechá-la      | rascunho de formulário, estado temporário da navegação |
+### `sessionStorage` — o bolso do passeio
 
-Pense assim: `localStorage` é um armário em casa (fica lá até você esvaziar);
-`sessionStorage` é o seu bolso durante um passeio (esvazia quando o passeio
-acaba).
+**Mesma API** do `localStorage`, mas os dados **morrem quando a aba fecha**.
+Pense no `localStorage` como um armário em casa e no `sessionStorage` como o
+bolso durante um passeio: esvazia quando o passeio acaba. Ideal para rascunhos de
+formulário e estado temporário (voltaremos a ele na seção 19.9).
+
+### IndexedDB — o banco de dados local
+
+Um banco de dados **de verdade** dentro do navegador: guarda objetos sem
+conversão para texto, aceita **centenas de MB**, tem índices de busca e
+transações, e toda a API é assíncrona. É o que aplicações grandes (Google Docs,
+por exemplo) usam para trabalhar offline com muitos dados. O custo é uma API
+verbosa — para o nosso volume, o `localStorage` resolve. Fica registrado como o
+próximo degrau quando o cache crescer.
+
+### Cache API — feita para a rede
+
+Em vez de chave → texto, ela guarda **pares de requisição e resposta HTTP
+completas** — como um mini servidor dentro do navegador:
+
+```js
+const cache = await caches.open("app-livros-v1");
+await cache.add("https://rickandmortyapi.com/api/character/?page=1");
+const resposta = await caches.match("https://rickandmortyapi.com/api/character/?page=1");
+```
+
+É a parceira natural dos **Service Workers**, estrelas do próximo capítulo.
+
+### Tabela de decisão
+
+| Armazenamento      | Capacidade      | Vive até...           | Vocação                                          |
+|--------------------|-----------------|------------------------|--------------------------------------------------|
+| **Cookies**        | ~4 KB           | a expiração definida   | sessão e identificação junto ao servidor         |
+| **`localStorage`** | ~5–10 MB        | ser apagado            | preferências e cache simples de dados            |
+| **`sessionStorage`** | ~5 MB         | a aba fechar           | rascunhos e estado temporário                    |
+| **IndexedDB**      | centenas de MB  | ser apagado            | grandes volumes estruturados, offline pesado     |
+| **Cache API**      | grande (cota)   | ser apagado            | respostas HTTP completas, Service Workers        |
+
+> ⚠️ **Cuidado — o que NÃO guardar**
+> Qualquer script da página consegue ler esses armazenamentos. Nunca guarde dados
+> **sensíveis** (senhas, tokens de acesso, dados de cartão) neles. Cache é para
+> dados públicos e preferências — não para segredos.
 
 > 💡 **Nos bastidores — quanto cabe e onde vejo?**
-> Cada site tem por volta de **5 MB** de espaço no Web Storage — muito para
-> texto, pouco para imagens ou vídeos. Você pode inspecionar tudo o que está
-> guardado nas DevTools: aba **Application** (ou *Armazenamento*) → *Local
-> Storage* / *Session Storage*. É ótimo para depurar o cache que vamos construir.
+> Você pode inspecionar tudo o que está guardado nas DevTools: aba
+> **Application** (ou *Armazenamento*) → *Local Storage* / *Session Storage* /
+> *IndexedDB* / *Cache Storage*. Deixe essa aba aberta durante o capítulo inteiro.
 
 ---
 
@@ -109,16 +175,10 @@ que já vimos no `fetch` (Cap. 13). Duas funções fazem a ponte:
 ```js
 const livro = { id: 1, titulo: "Dom Casmurro" };
 
-localStorage.setItem("livro", JSON.stringify(livro));   // objeto → texto
+localStorage.setItem("livro", JSON.stringify(livro));    // objeto → texto
 const salvo = JSON.parse(localStorage.getItem("livro")); // texto → objeto
 console.log(salvo.titulo); // "Dom Casmurro"  ✅
 ```
-
-> ⚠️ **Cuidado — `JSON.parse` em valor inexistente**
-> Se a chave não existir, `getItem` devolve `null`. E `JSON.parse(null)` devolve
-> `null` sem erro — mas `JSON.parse` de um texto **quebrado** lança exceção.
-> Ao ler o cache, é prudente checar antes: `if (texto) { ... }`. Vamos fazer
-> exatamente isso na nossa função de cache.
 
 > 🧩 **Montando o quebra-cabeça**
 > Repare na simetria com o Capítulo 13: lá, `resposta.json()` convertia o **texto
@@ -157,162 +217,236 @@ visitas. Simples, e já uma melhora real de experiência.
 
 ---
 
-## 19.5 O prêmio principal: um cache de requisições
+## 19.5 O padrão Strategy: estratégias de armazenamento intercambiáveis
 
-Agora o coração do capítulo. Vamos construir uma camada de **cache** por cima da
-nossa função genérica `buscarDados` (Cap. 14). A lógica é uma frase:
+Agora rumo ao prêmio principal — o cache de requisições. Antes de escrevê-lo, uma
+decisão de projeto: **onde** guardar as cópias? Em memória (um `Map` — rápido,
+mas morre no F5)? No `localStorage` (sobrevive ao F5)? Amanhã, no IndexedDB?
 
-> Antes de ir à internet, **pergunte ao cache**. Se o dado já estiver lá, use-o e
-> **evite a requisição**. Se não estiver, busque na API e **guarde no cache** para
-> a próxima vez.
-
-Crie um novo arquivo na camada de serviços, `src/js/services/cache.js`:
+Em vez de amarrar o cache a uma resposta, o projeto define um **contrato**:
+qualquer armazenamento serve, desde que saiba responder `has`, `get` e `set`.
+Cada implementação desse contrato é uma **estratégia**. É o arquivo real
+`src/js/components/services/storageStrategy.js` do repositório:
 
 ```js
-// src/js/services/cache.js
-import buscarDados from "./api.js";
+// services/storageStrategy.js
+const Memoria = {
+    _cache: new Map(),
 
-async function buscarComCache(url) {
-  const emCache = localStorage.getItem(url); // a própria URL é a chave!
+    has(key) {
+        return this._cache.has(key);
+    },
+    get(key) {
+        return this._cache.get(key);
+    },
+    set(key, value) {
+        this._cache.set(key, value);
+    }
+};
 
-  if (emCache) {
-    console.log("Servido do cache (sem rede):", url);
-    return JSON.parse(emCache); // devolve a cópia local, instantâneo
-  }
+const LocalStorage = {
+    has(key) {
+        return localStorage.getItem(key) !== null;
+    },
+    get(key) {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : null;
+    },
+    set(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+};
 
-  console.log("Buscando na internet:", url);
-  const dados = await buscarDados(url);              // nossa função do Cap. 14
-  localStorage.setItem(url, JSON.stringify(dados));  // guarda para a próxima
-  return dados;
+export { Memoria, LocalStorage };
+```
+
+Duas observações de mestre de obras:
+
+- A estratégia `LocalStorage` **esconde dentro de si** o `JSON.stringify` /
+  `JSON.parse` da seção 19.3. Quem a usa entrega e recebe **objetos prontos**,
+  sem saber que por baixo só existe texto.
+- As duas estratégias têm **exatamente os mesmos métodos**. Trocar de uma para a
+  outra é trocar **uma palavra** — como você verá na próxima seção.
+
+Isso é um padrão de projeto clássico chamado **Strategy**: uma família de
+algoritmos intercambiáveis atrás de uma mesma interface.
+
+> 🧩 **Montando o quebra-cabeça**
+> É o mesmo espírito do contrato das nossas páginas (`url`, `label`, `pagina`,
+> Cap. 9): quem cumpre o contrato entra no jogo sem que o resto do código mude.
+> Contratos uniformes são o segredo recorrente de toda a arquitetura do curso.
+
+---
+
+## 19.6 O Decorator/Proxy: um cache que envolve a busca
+
+Agora a peça central. O arquivo real `services/apiCache.js` cria uma função que
+**envolve** a função genérica da camada de serviços, adicionando o comportamento
+de cache **por fora**, sem alterar uma linha dela:
+
+```js
+// services/apiCache.js
+import buscarServicos from "./api.js";
+import { Memoria, LocalStorage } from "./storageStrategy.js";
+
+const storage = LocalStorage;
+
+async function buscarComCache(url, dados = '', forma = '') {
+    const formataURL = `${url}${dados}${forma}`;
+    if (storage.has(formataURL)) {
+        console.time(`[CACHE] Tempo para: ${dados || 'página inicial'}`);
+        const resultadoEmCache = storage.get(formataURL);
+        console.timeEnd(`[CACHE] Tempo para: ${dados || 'página inicial'}`);
+        return resultadoEmCache;
+    }
+    console.time(`[SERVIDOR] Tempo para: ${dados || 'página inicial'}`);
+    try {
+        const resultadoServidor = await buscarServicos(url, dados, forma);
+        storage.set(formataURL, resultadoServidor);
+        console.timeEnd(`[SERVIDOR] Tempo para: ${dados || 'página inicial'}`);
+        return resultadoServidor;
+    } catch (error) {
+        console.timeEnd(`[SERVIDOR] Tempo para: ${dados || 'página inicial'}`);
+        console.error("Erro na busca:", error);
+        throw error;
+    }
 }
 
 export default buscarComCache;
 ```
 
-Vamos apreciar as decisões de projeto aqui:
+> 💡 **Nos bastidores — `buscarServicos`?**
+> No repositório, a função genérica da camada de serviços chama-se
+> `buscarServicos(url, dados, forma)` — ela monta a URL em três partes (base,
+> dado variável, sufixo) e serve qualquer API. É a mesma personagem que chamamos
+> de `buscarDados` nos Capítulos 14 a 17; mudou o nome, não o papel.
 
-- **A URL é a chave do cache.** Genial na sua simplicidade: `.../books/?page=2` e
-  `.../books/?page=3` têm entradas separadas e independentes. Cada recurso único
-  tem seu próprio cache, automaticamente.
-- **Cai no cache primeiro** (`if (emCache)`). Se acharmos, retornamos na hora — o
-  `"Carregando..."` mal aparece.
-- **Só busca na rede se necessário**, e ao buscar, **guarda** o resultado.
-- Reusa `buscarDados`, que já faz o `fetch` e a checagem de erro. **DRY** (Cap. 9)
-  em ação: não reescrevemos nada do que já existia.
+Vamos apreciar as decisões, uma a uma:
 
-### Ligando o cache ao serviço de livros
+- **A URL completa é a chave do cache.** Genial na simplicidade:
+  `...character/?page=1` e `...character/?page=2` têm entradas separadas e
+  independentes, automaticamente.
+- **Cache primeiro** (`if (storage.has(...))`). Se a estratégia tem a chave,
+  devolvemos a cópia local e a rede **nem é acordada**.
+- **A estratégia é plugável.** A linha `const storage = LocalStorage` é o
+  interruptor: troque por `Memoria` e toda a persistência muda — sem tocar em
+  mais nada. O Strategy da seção anterior em ação.
+- **A prova está no cronômetro.** `console.time`/`console.timeEnd` medem e
+  imprimem o tempo de cada caminho. Navegue com o console aberto: a busca no
+  servidor leva **dezenas ou centenas de milissegundos**; a resposta do cache,
+  **frações de milissegundo**. Não acredite em mim — leia os seus números.
 
-Como toda a aplicação já passa por uma camada de serviços bem separada, adotar o
-cache é quase trivial. No `services/livros.js` (Cap. 16), trocamos a importação:
+Esse desenho — uma função que envolve outra **preservando a mesma assinatura** e
+adicionando comportamento — é o padrão **Decorator** (e, quando a intenção é
+controlar o acesso ao original, **Proxy**). O detalhe que sustenta tudo:
+`buscarComCache(url, dados, forma)` recebe **os mesmos parâmetros** de
+`buscarServicos(url, dados, forma)`. Assinaturas iguais tornam as duas
+**intercambiáveis**.
+
+### A troca de uma linha
+
+E aqui a camada de serviços paga todos os seus dividendos. Para a tela de
+cadastro (Cap. 15) e a página de personagens (Cap. 17) ganharem cache, a mudança
+foi **somente o import**:
 
 ```js
 // antes:
-// import buscarDados from "./api.js";
+// import buscarServicos from "../services/api.js"
 
 // depois:
-import buscarComCache from "./cache.js";
-
-async function buscarListaLivros(pagina) {
-  const dados = await buscarComCache(`${BASE_URL}/?search=${TERMO_PADRAO}&page=${pagina}`);
-  // ...o resto continua idêntico
-}
+import buscarServicos from "../services/apiCache.js"
 ```
 
-Só isso. Trocamos `buscarDados` por `buscarComCache` e a tela de livros passa a
-cachear. **Faça o teste da seção 19.1 de novo**: entre na página 1, vá para a 2,
-volte para a 1. Desta vez, ao voltar, a aba Network fica **quieta** — nenhuma
-requisição nova — e o console mostra `"Servido do cache (sem rede)"`. Você **viu**
-a economia de rede acontecer.
+Nada mais mudou nas páginas — o decorator responde pelo original sem que ninguém
+perceba a troca. **Refaça o teste da seção 19.1**: página 1, página 2, volta
+para a 1. A aba Network fica **quieta** na revisita e o console imprime o tempo
+do caminho `[CACHE]`.
 
 > 🧩 **Montando o quebra-cabeça**
-> Este é o momento em que a arquitetura em camadas paga todos os seus dividendos.
-> Porque **toda** requisição do projeto passa por um ponto único, adotar cache foi
-> uma troca de uma linha por serviço. Se o código estivesse com `fetch`
-> espalhado por todas as páginas (como quase fizemos lá no começo), teríamos que
-> caçar e alterar dezenas de lugares. **Boas decisões de estrutura tornam
-> melhorias futuras baratas** — guarde essa lição para a vida.
+> Porque **toda** requisição do projeto passa por um ponto único (Cap. 14),
+> adotar cache custou **uma linha por página**. Se o `fetch` estivesse espalhado
+> pelos componentes, teríamos que caçar e alterar dezenas de lugares. **Boas
+> decisões de estrutura tornam melhorias futuras baratas** — essa lição vale
+> mais que o próprio cache.
 
 ---
 
-## 19.6 O problema do cache eterno: dados que envelhecem
+## 19.7 O problema do cache eterno: dados que envelhecem
 
 Nosso cache tem uma falha: ele é **eterno**. Uma vez guardado, o dado nunca é
-atualizado. Se a API mudar (um livro novo entra no catálogo, um preço muda),
-continuaríamos mostrando a cópia antiga para sempre. Há uma frase famosa na área:
+atualizado. Se a API mudar, continuaríamos mostrando a cópia antiga para sempre —
+eis a **invalidação de cache** da frase do Karlton.
 
-> "Existem apenas duas coisas difíceis na computação: invalidação de cache e dar
-> nomes às coisas." — Phil Karlton
-
-Vamos resolver a parte da invalidação com a técnica mais comum: dar ao cache uma
-**validade** (chamada de **TTL**, *time to live* — "tempo de vida"). A ideia:
-guardar, junto com os dados, o **momento** em que foram salvos. Na leitura,
-verificar se o cache ainda é "fresco" o suficiente.
+A técnica mais comum é dar ao cache uma **validade** (o **TTL**, *time to live*):
+guardar, junto com os dados, o **momento** em que foram salvos, e conferir a
+idade na leitura. E repare **onde** a mudança mora na nossa arquitetura: dentro
+da **estratégia**, não no decorator — o `apiCache.js` continua intocado:
 
 ```js
-// src/js/services/cache.js (versão com validade)
-import buscarDados from "./api.js";
+// evolução da estratégia LocalStorage com validade de 10 minutos
+const VALIDADE_MS = 10 * 60 * 1000;
 
-const VALIDADE_MS = 10 * 60 * 1000; // 10 minutos em milissegundos
-
-async function buscarComCache(url) {
-  const bruto = localStorage.getItem(url);
-
-  if (bruto) {
-    const { dados, salvoEm } = JSON.parse(bruto);
-    const idade = Date.now() - salvoEm; // há quanto tempo foi salvo
-
-    if (idade < VALIDADE_MS) {
-      console.log("Cache válido, sem rede:", url);
-      return dados;
+const LocalStorage = {
+    has(key) {
+        return this.get(key) !== null; // reusa o get, que já checa validade
+    },
+    get(key) {
+        const bruto = localStorage.getItem(key);
+        if (!bruto) return null;
+        const { dados, salvoEm } = JSON.parse(bruto);
+        if (Date.now() - salvoEm > VALIDADE_MS) return null; // expirou!
+        return dados;
+    },
+    set(key, value) {
+        localStorage.setItem(key, JSON.stringify({ dados: value, salvoEm: Date.now() }));
     }
-    console.log("Cache expirado, buscando de novo:", url);
-  }
-
-  const dados = await buscarDados(url);
-  // guardamos os dados JUNTO com o carimbo de tempo
-  localStorage.setItem(url, JSON.stringify({ dados, salvoEm: Date.now() }));
-  return dados;
-}
-
-export default buscarComCache;
+};
 ```
 
-O que mudou:
+- Guardamos **`{ dados, salvoEm }`** em vez dos dados crus; `Date.now()` é o
+  carimbo de tempo (milissegundos desde 1970).
+- Na leitura, calculamos a idade e devolvemos `null` para cache vencido — o
+  decorator então busca de novo e regrava com carimbo novo, sem saber de nada.
 
-- Guardamos um objeto **`{ dados, salvoEm }`** em vez dos dados crus. `salvoEm`
-  recebe `Date.now()` — o número de milissegundos desde 1970, um "carimbo de
-  tempo" universal.
-- Na leitura, calculamos a **idade** (`Date.now() - salvoEm`) e só usamos o cache
-  se ele tiver **menos de 10 minutos**. Passou disso, buscamos de novo e
-  regravamos com um carimbo novo.
-
-Agora temos o melhor dos dois mundos: **velocidade** (dados recentes vêm do
-cache, instantâneos) e **frescor** (dados velhos são renovados). Ajustar
-`VALIDADE_MS` é ajustar o equilíbrio entre economia e atualidade — dados que
-mudam pouco (um catálogo de livros clássicos) podem ter validade longa; dados
-voláteis (cotações, estoque) pedem validade curta.
-
-> 💡 **Nos bastidores — estratégias de cache**
-> O que construímos é a estratégia **"cache primeiro, com validade"**. Existem
-> outras, cada uma com seu compromisso: *"rede primeiro"* (tenta a rede e cai no
-> cache se falhar — ótimo para offline), *"stale-while-revalidate"* (mostra o
-> cache velho **imediatamente** e atualiza em segundo plano — o melhor de
-> percepção de velocidade). Você reencontrará esses mesmos nomes ao estudar
-> Service Workers, onde eles brilham. A base conceitual é a que você acabou de
-> construir.
+Agora temos **velocidade** (dados recentes vêm do cache) e **frescor** (dados
+velhos são renovados). Ajustar `VALIDADE_MS` é ajustar o compromisso: catálogo de
+livros clássicos pode ter validade longa; cotações e estoque pedem validade
+curta.
 
 ---
 
-## 19.7 `sessionStorage` na prática: rascunho de formulário
+## 19.8 As estratégias de cache clássicas (o vocabulário do mercado)
 
-Nem todo dado deve viver para sempre. Às vezes queremos lembrar algo **só
-enquanto o usuário está por ali**. É o caso de um formulário em preenchimento: se
-a pessoa troca de página por engano e volta, seria ótimo não ter perdido o que
-digitou — mas não faz sentido guardar isso para sempre. Cenário perfeito para o
-**`sessionStorage`**.
+O que implementamos tem nome na indústria: **cache first** — olhe o cache antes,
+rede só na falta. Existe um vocabulário completo, e cada estratégia resolve um
+compromisso diferente entre **velocidade** e **frescor**:
 
-Vamos aplicar ao formulário de contato (Cap. 8). Salvamos cada tecla digitada e,
-ao montar a página, restauramos o rascunho:
+| Estratégia                  | Como age                                                        | Ideal para                          |
+|-----------------------------|------------------------------------------------------------------|-------------------------------------|
+| **Cache first**             | responde do cache; rede apenas se não houver cópia               | dados que mudam pouco (a nossa!)    |
+| **Network first**           | tenta a rede; se falhar, cai para o cache                        | dados que precisam estar frescos, com plano B offline |
+| **Stale-while-revalidate**  | responde o cache **na hora** e atualiza em segundo plano         | feeds e notícias — ninguém espera   |
+| **Network only / Cache only** | os extremos, sem fallback                                      | casos especiais                     |
+
+Você acabou de construir a primeira **à mão** — e por isso as outras três são
+variações que você já sabe ler: mude a ordem do `if`, adicione um `catch` que
+consulta a estratégia, dispare a revalidação sem `await`.
+
+> 💡 **Nos bastidores — onde esses nomes brilham**
+> Esses mesmos nomes são o **coração dos Service Workers** (próximo capítulo):
+> um script que intercepta **todas** as requisições do site — HTML, CSS, imagens,
+> scripts, não só as chamadas de API — e aplica uma dessas estratégias a cada
+> uma, usando a **Cache API** da seção 19.2. É o que permite o feito máximo: o
+> App Livros **abrir sem internet nenhuma**. A base conceitual você acabou de
+> construir; o Capítulo 20 é a promoção dela para o app inteiro.
+
+---
+
+## 19.9 `sessionStorage` na prática: rascunho de formulário
+
+Nem todo dado deve viver para sempre. Um formulário em preenchimento é o cenário
+perfeito para o **`sessionStorage`**: se a pessoa troca de página por engano e
+volta, o texto continua lá; fechou a aba, o rascunho morre junto.
 
 ```js
 // salvar o rascunho enquanto digita
@@ -331,47 +465,32 @@ if (rascunho) {
 sessionStorage.removeItem("rascunho-mensagem");
 ```
 
-Usamos o evento **`input`** (Cap. 5), que dispara a cada alteração do campo.
-Troque de página, volte, e o texto continua lá. Feche a aba e reabra: o rascunho
-sumiu — exatamente o comportamento que queremos. A escolha entre `localStorage` e
-`sessionStorage` é, no fundo, uma pergunta de design: *"esse dado deve sobreviver
-ao fechamento da aba?"*.
-
----
-
-## 19.8 Resumo das ferramentas
-
-| Preciso...                                             | Uso              |
-|-------------------------------------------------------|------------------|
-| Lembrar uma preferência para sempre (tema, idioma)    | `localStorage`   |
-| Cachear respostas de API para economizar rede         | `localStorage` + validade |
-| Guardar um rascunho temporário (só nesta aba)         | `sessionStorage` |
-| Guardar um objeto ou array                            | `JSON.stringify` ao salvar, `JSON.parse` ao ler |
-| Ver/limpar o que está guardado                        | DevTools → Application → Storage |
-
-> ⚠️ **Cuidado — o que NÃO guardar**
-> Nunca guarde dados **sensíveis** (senhas, tokens de acesso, dados de cartão) no
-> Web Storage: qualquer script na página consegue lê-los. Ele é ótimo para
-> preferências e cache de dados públicos — não para segredos.
+A escolha entre `localStorage` e `sessionStorage` é, no fundo, uma pergunta de
+design: *"esse dado deve sobreviver ao fechamento da aba?"*.
 
 ---
 
 ## Recapitulando
 
-- O **Web Storage** (`localStorage`/`sessionStorage`) guarda dados **chave →
-  valor** no navegador, com os métodos `setItem`, `getItem`, `removeItem`,
-  `clear`.
-- **`localStorage`** persiste para sempre; **`sessionStorage`** dura só enquanto
-  a aba estiver aberta.
-- Ele só guarda **texto** — use **`JSON.stringify`** para salvar objetos e
-  **`JSON.parse`** para lê-los.
-- Um **cache** por cima de `buscarDados` (usando a **URL como chave**) evita
-  requisições repetidas, economizando **tempo, dados e servidor**.
-- Um **TTL** (validade via `Date.now()`) mantém o cache rápido **e** fresco.
-- Como a aplicação tem uma **camada de serviços** única, adotar cache custou uma
-  linha por serviço — a recompensa de uma boa arquitetura.
-- `sessionStorage` é ideal para dados temporários, como o rascunho de um
-  formulário.
+- O navegador tem **cinco armazenamentos**: cookies (sessão com o servidor),
+  `localStorage` (persistente), `sessionStorage` (por aba), IndexedDB (banco
+  local) e Cache API (respostas HTTP completas).
+- O Web Storage só guarda **texto** — `JSON.stringify`/`JSON.parse` fazem a
+  ponte (e a estratégia `LocalStorage` esconde isso de quem a usa).
+- O **`storageStrategy.js`** aplica o padrão **Strategy**: `Memoria` e
+  `LocalStorage` cumprem o mesmo contrato `has`/`get`/`set` e são
+  intercambiáveis com a troca de uma palavra.
+- O **`apiCache.js`** é um **Decorator/Proxy**: envolve `buscarServicos` com a
+  lógica de cache **mantendo a mesma assinatura**, e prova o ganho com
+  `console.time` — servidor em centenas de ms, cache em frações de ms.
+- A **URL como chave** dá a cada recurso seu próprio cache, de graça.
+- Um **TTL** (validade via `Date.now()`) cura o cache eterno — e mora dentro da
+  estratégia, não do decorator.
+- O vocabulário do mercado: **cache first** (a nossa), **network first**,
+  **stale-while-revalidate** — os mesmos nomes que os Service Workers usam para
+  levar o cache ao app inteiro (Cap. 20).
+- Cache é onipresente no mundo real: navegador, CDNs, feeds de apps, DNS,
+  processador. Velocidade é funcionalidade.
 
 ---
 
@@ -379,17 +498,23 @@ ao fechamento da aba?"*.
 >
 > 1. Implemente o **tema persistente** (seção 19.4): um botão que troca o tema e
 >    o salva no `localStorage`, e a restauração ao carregar a página.
-> 2. Crie o `services/cache.js` (versão simples da seção 19.5) e ligue-o ao
->    serviço de livros. Com a aba **Network** aberta, confirme que revisitar uma
->    página **não** dispara nova requisição.
-> 3. Evolua o cache para a versão **com validade** (seção 19.6). Teste reduzindo
->    `VALIDADE_MS` para 10 segundos e observe o cache expirar.
-> 4. Aplique o cache **também** ao serviço do Rick and Morty (Cap. 17). Repare
->    como é a mesma troca de uma linha.
-> 5. Implemente o **rascunho de formulário** com `sessionStorage` (seção 19.7) na
->    página de contato.
-> 6. **Desafio:** crie uma função `limparCache()` que remove do `localStorage`
+> 2. Com o console aberto, navegue pelas páginas de personagens e **anote os
+>    tempos** de `[SERVIDOR]` e `[CACHE]`. Calcule quantas vezes o cache é mais
+>    rápido.
+> 3. Troque a estratégia do `apiCache.js` para `Memoria`, recarregue com F5 e
+>    explique a diferença de comportamento em relação à `LocalStorage`.
+> 4. Crie uma terceira estratégia, `SessionStorage`, cumprindo o contrato
+>    `has`/`get`/`set`, e plugue-a no decorator.
+> 5. Evolua a estratégia `LocalStorage` para a versão **com validade** (seção
+>    19.7). Teste com `VALIDADE_MS` de 10 segundos e observe o cache expirar.
+> 6. Implemente o **rascunho de formulário** com `sessionStorage` (seção 19.9)
+>    na página de contato.
+> 7. **Desafio:** crie uma função `limparCache()` que remove do `localStorage`
 >    apenas as chaves que começam com `http` (as do cache de API), preservando
 >    outras como o `tema`. Dica: percorra `Object.keys(localStorage)`.
-> 7. **Reflexão:** explique, com suas palavras, por que a estratégia de "cache
->    com validade" é superior tanto ao "sem cache" quanto ao "cache eterno".
+> 8. **Desafio:** transforme o `apiCache.js` em **network first**: tente a rede
+>    e, no `catch`, devolva o que houver na estratégia. Em qual cenário essa
+>    versão é superior à nossa?
+> 9. **Reflexão:** para um site de notícias, qual estratégia você escolheria —
+>    cache first, network first ou stale-while-revalidate? Justifique pelo
+>    compromisso entre velocidade e frescor.
