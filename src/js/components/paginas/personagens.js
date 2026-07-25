@@ -56,7 +56,7 @@ async function capturaBotoes(app, personagens) {
     
     cards.forEach(card => {
         card.addEventListener("click", () => {
-            const index = card.getAttribute("data-index")
+            const index = card.dataset.index
             const personagem = personagens[index]
             const conteudoPersonagem = `
                 <img src="${personagem.image}" style="border-radius: 50%; width: 150px; border: 4px solid #88e23b;">
