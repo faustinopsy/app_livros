@@ -1,4 +1,4 @@
-import buscarServicos from "../services/api.js"
+import buscarServicos from "../services/apiCache.js"
 async function capturacep(){
     const campocep = document.getElementById("cep")
     campocep.addEventListener("blur",async (event)=>{

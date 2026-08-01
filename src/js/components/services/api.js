@@ -1,4 +1,4 @@
-async function buscarServicos(url, dados='', forma=''){
+async function buscarNoMundo(url, dados='', forma=''){
     try {
         const formataURL = `${url}${dados}${forma}`
         const response = await fetch(formataURL);
@@ -8,4 +8,4 @@ async function buscarServicos(url, dados='', forma=''){
         console.error(error);
     };
 }
-export default buscarServicos;
+export default buscarNoMundo;
