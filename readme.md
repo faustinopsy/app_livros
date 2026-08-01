@@ -92,8 +92,9 @@ Depois acesse `http://localhost:8000` (ou a porta indicada).
 - [x] Menu dinâmico a partir de objetos
 - [x] Padronização das páginas
 - [x] Centralização do roteamento (SPA)
-- [ ] Consumo de API com `fetch` e `async/await`
-- [ ] Renderização dinâmica de dados vindos da API
+- [X] Consumo de API com `fetch` e `async/await`
+- [x] Renderização dinâmica de dados vindos da API
 - [ ] Refinamentos e tópicos avançados
+- [ ] Construção dos projetos individuais
 
 > Este README acompanha a evolução do curso e será atualizado a cada novo sábado. 
