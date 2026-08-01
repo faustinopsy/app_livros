@@ -94,7 +94,8 @@ Depois acesse `http://localhost:8000` (ou a porta indicada).
 - [x] Centralização do roteamento (SPA)
 - [X] Consumo de API com `fetch` e `async/await`
 - [x] Renderização dinâmica de dados vindos da API
-- [ ] Refinamentos e tópicos avançados
+- [x] Estrategias de cache
+- [ ] Usar IA e agentes para acelerar o desenvolvimento
 - [ ] Construção dos projetos individuais
 
 > Este README acompanha a evolução do curso e será atualizado a cada novo sábado. 
