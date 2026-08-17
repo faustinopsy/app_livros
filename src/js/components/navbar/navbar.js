@@ -1,27 +1,39 @@
 function navbar(item_menu){
 const navbar = document.getElementById('navbar');
-navbar.innerHTML = `<nav class="bem-navbar">
-            <a href="#" class="bem-navbar__brand">Brand</a>
-            <input type="checkbox" id="nav-toggle" class="bem-navbar__checkbox">
-            <label for="nav-toggle" class="bem-navbar__toggle">☰</label>
-            <ul class="bem-navbar__menu">
-                ${
-                    item_menu.map((item)=>{
-                        return `<li class="bem-navbar__item">
-                            <a href="${item.url}" class="bem-navbar__link">${item.label}</a>
-                        </li>`
-                    })
+navbar.innerHTML = `<nav class="navbar is-info" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#">
+      <strong>Brand</strong>
+    </a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
 
-                }
-            </ul>
-        </nav>`.replaceAll(',','');
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+        ${
+            item_menu.map((item)=>{
+                return `<a href="${item.url}" class="navbar-item">${item.label}</a>`
+            }).join('')
+        }
+    </div>
+  </div>
+</nav>`;
+
+// Script simple para o menu mobile (Bulma)
+setTimeout(() => {
+    const burger = document.querySelector('.navbar-burger');
+    const menu = document.querySelector('.navbar-menu');
+    if(burger && menu) {
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('is-active');
+            menu.classList.toggle('is-active');
+        });
+    }
+}, 100);
 }
-/*
-item_menu
-for(let i=0; i<item_menu.length; i++){
-    `<li class="bem-navbar__item">
-        <a href="${item_menu[i].url}" class="bem-navbar__link >${item_menu[i].label}</a>
-    </li>`
-}
-*/
+
 export default navbar;

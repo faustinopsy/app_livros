@@ -1,7 +1,11 @@
 import navbar from "./components/navbar/navbar.js";
 import roteador from "./components/rotas/rotas.js";
+import { initChatbot } from "./components/chatbot/chatbot.js";
+
 navbar(roteador);
 const app = document.getElementById('app');
+
+initChatbot();
 //console.log(roteador)
 const mapaDeRotas = {}
 //console.log(mapaDeRotas)
@@ -25,7 +29,9 @@ const rota404 = { pagina: () => `<div> Página não encontrada 404 </div>`}
 async function render(){
     const rotaAtual = mapaDeRotas[hash] || rota404
     await rotaAtual.pagina(app)
-    
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 }
 // testes de assincronismo
 // console.log("A Primeira chamada")

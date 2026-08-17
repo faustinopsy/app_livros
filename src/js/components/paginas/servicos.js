@@ -24,20 +24,28 @@ const detalhes = [
 
 //
 async function servicos(app){
-    cardServico += `<div class="bem-grid-auto">`
+    cardServico += `
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">`
     for(let i=0; i < detalhes.length; i++){
         cardServico += `
-                    <div class="bem-card">
-                        <img class="bem-card__image" src="${detalhes[i].imagem}" alt="Image description">
-                        <div class="bem-card__body">
-                            <h3 class="bem-card__title">${detalhes[i].titulo}</h3>
-                            <p>${detalhes[i].descricao}</p>
+                    <div class="column is-one-quarter-desktop is-half-tablet">
+                        <div class="card h-100" style="height: 100%;">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="${detalhes[i].imagem}" alt="${detalhes[i].titulo}" style="object-fit: cover;">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-5" style="display:flex;align-items:center;gap:8px;"><i data-lucide="info" width="20" height="20"></i> ${detalhes[i].titulo}</p>
+                                <p class="subtitle is-6 mt-2">${detalhes[i].descricao}</p>
+                            </div>
                         </div>
                     </div>
-                
             `
         }
-    cardServico += `</div>`
+    cardServico += `</div></div></section>`
     app.innerHTML = cardServico
 }
 export default {

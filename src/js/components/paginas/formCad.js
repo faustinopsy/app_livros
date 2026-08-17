@@ -11,18 +11,43 @@ async function capturacep(){
 }
 async function telaCadastro(app){
     const formulario = `
-    <form id="cadastroCliente" class="bem-container" >
-        <label for="cep" class="bem-form__label" >CEP</label>
-        <input type="text" id="cep" class="bem-form__input" >
-        <label for="logradouro" class="bem-form__label">logradouro</label>
-        <input type="text" id="logradouro" class="bem-form__input">
-        <label for="bairro" class="bem-form__label">bairro</label>
-        <input type="text" id="bairro" class="bem-form__input">
-        <label for="localidade" class="bem-form__label">localidade</label>
-        <input type="text" id="localidade" class="bem-form__input">
-        <label for="estado" class="bem-form__label">estado</label>
-        <input type="text" id="estado" class="bem-form__input">
-    </form>
+    <section class="section">
+        <div class="container">
+            <h1 class="title is-3">Cadastro de Cliente</h1>
+            <form id="cadastroCliente" class="box">
+                <div class="field">
+                    <label for="cep" class="label">CEP</label>
+                    <div class="control">
+                        <input type="text" id="cep" class="input">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="logradouro" class="label">Logradouro</label>
+                    <div class="control">
+                        <input type="text" id="logradouro" class="input">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="bairro" class="label">Bairro</label>
+                    <div class="control">
+                        <input type="text" id="bairro" class="input">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="localidade" class="label">Localidade</label>
+                    <div class="control">
+                        <input type="text" id="localidade" class="input">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="estado" class="label">Estado</label>
+                    <div class="control">
+                        <input type="text" id="estado" class="input">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
     `
     app.innerHTML = formulario;
     await capturacep();

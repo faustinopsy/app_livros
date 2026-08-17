@@ -1,27 +1,43 @@
 // duas formas de exportar mais de uma função de um mesmo arquivo
 //
 async function contato(app) {
-const paginadecontato = `<section class="bem-container">
-<h1> Esta é página Contato </h1>
-    <form class="bem-container" id="formulario-de-contato">
-        <div class="bem-form__group">
-            <label for="assunto" class="bem-form__label">Assunto</label>
-            <input type="text" name="assunto" id="assunto" class="bem-form__input">
-        </div>
-        <div class="bem-form__group">
-            <label for="email" class="bem-form__label">email</label>
-            <input type="email" name="email" id="email" class="bem-form__input">
-        </div>
-        <div class="bem-form__group">
-            <label for="mensagem" class="bem-form__label">Mensagem</label>
-            <textarea class="bem-form__textarea" name="mensagem" id="mensagem" cols="30" rows="10"></textarea>
-        </div>
-        <button type="submit" class="bem-btn--primary">Enviar</button>
-    </form>
-    <ul id="lista_de_contatos">
-    </ul>
-    </section>
-    `
+const paginadecontato = `
+<section class="section">
+    <div class="container">
+        <h1 class="title is-3">Contato</h1>
+        <form id="formulario-de-contato" class="box">
+            <div class="field">
+                <label for="assunto" class="label">Assunto</label>
+                <div class="control">
+                    <input type="text" name="assunto" id="assunto" class="input" placeholder="Assunto">
+                </div>
+            </div>
+            <div class="field">
+                <label for="email" class="label">Email</label>
+                <div class="control">
+                    <input type="email" name="email" id="email" class="input" placeholder="seu@email.com">
+                </div>
+            </div>
+            <div class="field">
+                <label for="mensagem" class="label">Mensagem</label>
+                <div class="control">
+                    <textarea class="textarea" name="mensagem" id="mensagem" cols="30" rows="5" placeholder="Sua mensagem"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-primary">
+                        <span class="icon is-small"><i data-lucide="send"></i></span>
+                        <span>Enviar</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <ul id="lista_de_contatos" class="content mt-5">
+        </ul>
+    </div>
+</section>
+`
 
 app.innerHTML = paginadecontato;
 await capturarFormulario()

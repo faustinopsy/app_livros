@@ -7,32 +7,38 @@ async function criarPagina(app){
     console.log(detalhes.results)
     let cardServico = ""
     cardServico += `
-    <div class="bem-container">
-        <button class="bem-btn bem-btn--primary" id="btn-esquerda">
-            <span class="bem-btn__icon"> ◄ </span>
-            <span class="bem-btn__text"> ◄ </span>
-        </button>
-        <button class="bem-btn bem-btn--primary" id="btn-direita">
-            <span class="bem-btn__icon"> ► </span>
-            <span class="bem-btn__text"> ► </span>
-        </button>
-    </div>
-    <div class="bem-grid-auto">
-
+    <section class="section">
+        <div class="container">
+            <div class="buttons mb-5">
+                <button class="button is-primary" id="btn-esquerda">
+                    <span class="icon is-small"> ◄ </span>
+                    <span>Anterior</span>
+                </button>
+                <button class="button is-primary" id="btn-direita">
+                    <span>Próximo</span>
+                    <span class="icon is-small"> ► </span>
+                </button>
+            </div>
+            <div class="columns is-multiline">
     `
     for(let i=0; i < detalhes.results.length; i++){
         cardServico += `
-                    <div class="bem-card">
-                        <img class="bem-card__image" src="${detalhes.results[i].image}" alt="Image description">
-                        <div class="bem-card__body">
-                            <h3 class="bem-card__title">${detalhes.results[i].name}</h3>
-                            <p>${detalhes.results[i].species}</p>
+                    <div class="column is-one-quarter-desktop is-half-tablet">
+                        <div class="card h-100" style="height: 100%;">
+                            <div class="card-image">
+                                <figure class="image">
+                                    <img src="${detalhes.results[i].image}" alt="${detalhes.results[i].name}">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-5">${detalhes.results[i].name}</p>
+                                <p class="subtitle is-6 mt-2">${detalhes.results[i].species}</p>
+                            </div>
                         </div>
                     </div>
-                
             `
         }
-    cardServico += `</div>`
+    cardServico += `</div></div></section>`
     app.innerHTML = cardServico
     await capturaBotoes(app, detalhes.results)
 }
